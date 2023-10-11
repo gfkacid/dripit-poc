@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Artist;
+use App\Models\Drop;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+
+class ProfileController extends Controller
+{
+    public function show($handle='dokken'){
+
+        $user = User::where('username',$handle)
+//            ->with([
+//            'nfts_owned' => function ($query) {
+//                $query->with(['drop.track.artist']);
+//            },
+//        ])
+            ->withCount('nfts_owned as tokens_count')->firstOrFail();
+        $user->load(['nfts_owned.drop.track.artist']);
+        $user->artists_count = Artist::selectRaw('COUNT(DISTINCT artists.id) as count')
+            ->join('tracks', 'artists.id', '=', 'tracks.artist_id')
+            ->join('drops', 'tracks.id', '=', 'drops.track_id')
+            ->join('nfts', 'drops.id', '=', 'nfts.drop_id')
+            ->where('nfts.owner_id', $user->id)
+            ->value('count');
+
+        return $user;
+    }
+}

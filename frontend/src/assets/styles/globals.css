@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #afeeda;
+    --primary-dark: #68dfb9;
+    --secondary: #b27c66;
+    --secondary-dark: #885744;
+
+    --gray: #8d8d8d;
+    --info: #6c757d;
+    /* --black: #0d1821; */
+    --black: #131112;
+    --white: #fff;
+    --blue: #afeeda;
+    --green: #52b788;
+  }
+
+  html {
+    font-size: 62.5%;
+
+    @media only screen and (min-width: 768px) {
+      font-size: 75%;
+    }
+
+    @media only screen and (min-width: 1280px) {
+      font-size: 100%;
+    }
+  }
+
+  body {
+    color: var(--dark);
+    background: var(--white);
+  }
+}
+
+@layer components {
+  button {
+    transition: all 300ms ease-out;
+
+    &.bg-primary {
+      color: var(--black);
+      background-color: var(--primary);
+
+      &:hover {
+        background-color: var(--primary-dark);
+      }
+    }
+
+    &.bg-white {
+      color: var(--black);
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  a {
+    color: var(--secondary);
+    transition: all 300ms ease-out;
+
+    &:hover {
+      color: var(--secondary-dark);
+    }
+  }
+
+  main {
+    padding-top: 3.5rem;
+  }
+
+  .truncate-multi-lines {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+} */
