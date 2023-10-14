@@ -34,9 +34,9 @@ const settings = {
   ],
 };
 
-const Activity = () => {
+const Activity = ({ data }) => {
   const dispatch = useDispatch();
-  const activity = useSelector(selecLandingActivity);
+  const activity = useSelector((state) => data || selecLandingActivity(state));
 
   const fetchActivity = useCallback(
     () => dispatch(getlatestActivity()),
@@ -44,9 +44,7 @@ const Activity = () => {
   );
 
   useEffect(() => {
-    fetchActivity();
-
-    // let interval = setInterval(fetchActivity, 5000);
+    // const interval = setInterval(fetchActivity, 5000);
     // return () => clearInterval(interval);
   }, [dispatch, fetchActivity]);
 

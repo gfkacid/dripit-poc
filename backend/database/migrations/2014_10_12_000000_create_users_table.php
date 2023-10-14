@@ -20,8 +20,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('image');
             $table->string('pubkey');
-            $table->string('idToken');
-            $table->string('wallet_address');
+            $table->text('idToken');
+            $table->string('verifier_id')->unique();
+            $table->string('aggregate_verifier');
+            $table->string('eoa');
+            $table->string('safe');
             $table->rememberToken();
             $table->timestamps();
         });

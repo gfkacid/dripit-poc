@@ -10,3 +10,9 @@ export const selectAuthModalIsOpen = (state) =>
   selectAuthReducer(state).authModalIsOpen;
 
 export const selectAuthToken = (state) => selectAuthReducer(state).token;
+
+export const selectAuthIsPending = (state) =>
+  selectAuthReducer(state).authIsPending;
+
+export const selectUserRegistrationIsPending = (state) =>
+  selectAuthReducer(state).userRegistrationIsPending;

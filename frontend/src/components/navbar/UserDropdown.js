@@ -2,7 +2,10 @@
 
 import React from "react";
 import { Dropdown, Avatar, Button } from "flowbite-react";
-import { selectIsAuthenticated } from "@/store/auth/selectors";
+import {
+  selectAuthIsPending,
+  selectIsAuthenticated,
+} from "@/store/auth/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { toogleAuthModal } from "@/store/auth/slice";
 import {
@@ -19,6 +22,7 @@ export default function UserDropdown({ logout }) {
   const name = useSelector(selectAccountName);
   const email = useSelector(selectAccountEmail);
   const initials = useSelector(selectAccountNameInitials);
+  const authIsPending = useSelector(selectAuthIsPending);
 
   if (!isAuthenticated)
     return (
@@ -27,6 +31,7 @@ export default function UserDropdown({ logout }) {
         className="bg-primary"
         size="sm"
         onClick={() => dispatch(toogleAuthModal(true))}
+        disabled={authIsPending}
       >
         Sign In
       </Button>

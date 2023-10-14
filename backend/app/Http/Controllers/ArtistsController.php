@@ -16,7 +16,7 @@ class ArtistsController extends Controller
     }
 
     public function show($handle){
-        $artist = Artist::where('handle',$handle)->with(['tracks.drop'])->firstOrFail();
+        $artist = Artist::where('handle',$handle)->with(['tracks.drop','latestExtras'])->firstOrFail();
         $artist->collectors_count = User::whereHas('nfts_owned',function(Builder $q) use($artist){
            $q->whereHas('drop',function(Builder $q) use($artist){
                $q->whereHas('track',function(Builder $q) use($artist){

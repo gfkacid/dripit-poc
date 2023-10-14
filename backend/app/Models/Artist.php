@@ -14,10 +14,20 @@ class Artist extends Model
         return $this->hasMany(Track::class);
     }
 
-    public function drops()
+    public function extras()
     {
-
+        return $this->hasMany(ArtistExtras::class,'artist_id');
     }
+
+    public function latestExtras()
+    {
+        return $this->hasMany(ArtistExtras::class,'artist_id')->latest('date')->take(1);
+    }
+
+//    public function drops()
+//    {
+//
+//    }
 
 
 }

@@ -5,7 +5,7 @@ use App\Http\Controllers\StripeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DropsController;
-use App\Http\Controllers\VerifyToken;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArtistsController;
 use App\Http\Controllers\ActivityController;
 /*
@@ -24,7 +24,8 @@ use App\Http\Controllers\ActivityController;
 //});
 
 // Auth
-Route::post('verify-token',[VerifyToken::class,'verify']);
+Route::post('register-user',[AuthController::class,'registerUser']);
+Route::post('check-user',[AuthController::class,'checkUser']);
 
 // Marketplace
 Route::get('/latest-drops', [DropsController::class,'latest']);

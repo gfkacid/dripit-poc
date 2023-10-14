@@ -30,6 +30,7 @@ module.exports = {
         blue: "var(--blue)",
         info: "var(--info)",
         green: "var(--green)",
+        red: "var(--red)",
       },
     },
   },

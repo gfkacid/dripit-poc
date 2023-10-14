@@ -23,7 +23,10 @@ class User extends Authenticatable
         'image',
         'pubkey',
         'idToken',
-        'wallet_address'
+        'verifier_id',
+        'aggregate_verifier',
+        'eoa',
+        'safe'
     ];
 
     /**

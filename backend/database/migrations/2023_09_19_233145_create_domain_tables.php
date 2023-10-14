@@ -21,13 +21,28 @@ return new class extends Migration
             $table->string('cover');
             $table->text('bio');
             $table->string('spotify_id');
+            $table->string('youtube_id')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('twitter')->nullable();
             $table->timestamps();
 
+        });
+
+        Schema::create('artist_extras', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('youtube_subs')->nullable();
+            $table->unsignedBigInteger('spotify_monthly_listeners')->nullable();
+            $table->unsignedBigInteger('insta_followers')->nullable();
+            $table->dateTime('date');
+            $table->unsignedBigInteger('artist_id');
+            $table->foreign('artist_id')->references('id')->on('artists');
+            $table->timestamps();
         });
 
         Schema::create('tracks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->text('about');
             $table->string('image');
             $table->string('cover');
             $table->string('isrc');
@@ -117,6 +132,7 @@ return new class extends Migration
         Schema::dropIfExists('nfts');
         Schema::dropIfExists('drops');
         Schema::dropIfExists('tracks');
+        Schema::dropIfExists('artist_extras');
         Schema::dropIfExists('artists');
     }
 };

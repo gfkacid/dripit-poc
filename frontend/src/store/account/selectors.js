@@ -9,3 +9,6 @@ export const selectAccountProfileImage = (state) =>
   selectAccountReducer(state)?.profileImage;
 
 export const selectAccountEmail = (state) => selectAccountReducer(state)?.email;
+
+export const selectAccountIdToken = (state) =>
+  selectAccountReducer(state)?.idToken;

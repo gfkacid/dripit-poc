@@ -16,6 +16,7 @@
     --white: #fff;
     --blue: #afeeda;
     --green: #52b788;
+    --red: #9e2a2b;
   }
 
   html {
@@ -45,7 +46,7 @@
       background-color: var(--primary);
 
       &:hover {
-        background-color: var(--primary-dark);
+        background-color: var(--primary-dark) !important;
       }
     }
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { logoutUser } from "@/store/auth/slice";
+// import { logoutUser } from "@/store/auth/slice";
 
 const getApiBaseUrl = () => {
   return process.env.NEXT_PUBLIC_API_URL;

@@ -15,7 +15,7 @@ class DropsController extends Controller
 
     public function show($slug){
         if(empty($slug))return new ModelNotFoundException('Drop not found');
-        $drop = Drop::where('slug',$slug)->with(['track.artist','collectors'])->first();
+        $drop = Drop::where('slug',$slug)->with(['track.artist.latestExtras','collectors'])->first();
         return $drop;
     }
 

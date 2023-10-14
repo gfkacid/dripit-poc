@@ -13,7 +13,7 @@ import { selectIsAuthenticated } from "@/store/auth/selectors";
 import {
   selectAuthProvider,
   selectSelectedSafe,
-  selectSafeAddress,
+  selectEoa,
 } from "@/store/safe-global/selectors";
 
 const MONERIUM_TOKEN = "monerium_token";
@@ -28,7 +28,7 @@ const useSafeMoneriumPack = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const authProvider = useSelector(selectAuthProvider);
   const selectedSafe = useSelector(selectSelectedSafe);
-  const safeAddress = useSelector(selectSafeAddress);
+  const safeAddress = useSelector(selectEoa);
 
   console.log("safe monerium safeThreshold", safeThreshold);
   console.log("safe monerium moneriumPack", moneriumPack);

@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { logoutUser } from "../auth/slice";
-// import { getUserInfo } from "./actions";
 
 const INITIAL_STATE = {};
 
@@ -9,7 +8,7 @@ const slice = createSlice({
   initialState: INITIAL_STATE,
   reducers: {
     setUserInfo: (state, { payload }) => {
-      state = payload;
+      state = { ...state, ...payload };
 
       return state;
     },
@@ -20,11 +19,6 @@ const slice = createSlice({
 
       return state;
     });
-    // builder.addCase(getUserInfo.fulfilled, (state, payload) => {
-    //   state = payload;
-
-    //   return state;
-    // });
   },
 });
 

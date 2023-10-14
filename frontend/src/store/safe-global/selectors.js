@@ -6,5 +6,8 @@ export const selectAuthProvider = (state) =>
 export const selectSelectedSafe = (state) =>
   selectsafeGlobalReducer(state).selectedSafe;
 
-export const selectSafeAddress = (state) =>
+export const selectEoa = (state) =>
   selectsafeGlobalReducer(state).safeAuthSignInResponse?.eoa;
+
+export const selectWeb3AuthPack = (state) =>
+  selectsafeGlobalReducer(state)?.web3AuthPack;
