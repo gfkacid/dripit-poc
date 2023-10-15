@@ -21,9 +21,13 @@ const AboutArtist = () => {
           className="h-full w-full rounded-xl"
           fill
         />
-        <div className="absolute w-3/5 left-10 bottom-10 text-white flex flex-col">
-          <h4 className="text-xl mb-4 font-bold">{_get(artist, "name", "")}</h4>
-          <p className="text-lg mb-5">{_get(artist, "bio", "")}</p>
+        <div className="absolute w-3/5 left-10 bottom-10 text-white flex flex-col overflow-hidden">
+          <h4 className="text-xl mb-4 font-bold antialiased">
+            {_get(artist, "name", "")}
+          </h4>
+          <p className="text-lg mb-5 antialiased truncate-multi-lines">
+            {_get(artist, "bio", "")}
+          </p>
           <Button
             className="bg-white"
             color="white"

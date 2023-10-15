@@ -73,11 +73,22 @@
   }
 
   .truncate-multi-lines {
-    display: -webkit-box;
+    /* display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; */
+
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* number of lines to show */
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .dynamic-text-shadow {
+    letter-spacing: 0.05em;
+    text-shadow: 0.05em 0.05em 0px #d5d5d5, 0.1em 0.1em 0px rgba(0, 0, 0, 0.2);
   }
 }
 

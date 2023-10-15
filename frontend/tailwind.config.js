@@ -25,12 +25,12 @@ module.exports = {
         },
         red: {
           ...colors.red,
+          DEFAULT: "var(--red)",
         },
         black: "var(--black)",
         blue: "var(--blue)",
         info: "var(--info)",
         green: "var(--green)",
-        red: "var(--red)",
       },
     },
   },

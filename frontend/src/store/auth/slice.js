@@ -41,6 +41,11 @@ const slice = createSlice({
 
       return state;
     },
+    setUserRegistrationIsPending: (state, { payload }) => {
+      state.userRegistrationIsPending = payload;
+
+      return state;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(verifyLoggedInUser.fulfilled, (state, { payload }) => {
@@ -59,6 +64,7 @@ export const {
   logoutUser,
   initiliazeAuthProvider,
   setAuthIsPending,
+  setUserRegistrationIsPending,
 } = slice.actions;
 
 export default slice.reducer;

@@ -19,19 +19,21 @@ function Cover() {
       />
 
       <div className="absolute bottom-10 left-10 text-white">
-        <h1 className="font-bold text-3xl mb-10 antialiased">{artist.name}</h1>
+        <h1 className="font-bold text-3xl mb-10 antialiased dynamic-text-shadow">
+          {artist.name}
+        </h1>
         <div className="flex">
           <div className="pr-10">
-            <div className="font-mono font-bold text-xl antialiased ">
+            <div className="font-mono font-bold text-xl antialiased dynamic-text-shadow">
               {artist?.drops_count || 0}
             </div>
-            <div className="text-sm">Drops</div>
+            <div className="text-sm dynamic-text-shadow">Drops</div>
           </div>
           <div className="pr-5">
-            <div className="font-mono font-bold text-xl antialiased">
+            <div className="font-mono font-bold text-xl antialiased dynamic-text-shadow">
               {artist?.collectors_count || 0}
             </div>
-            <div className="text-sm">Collectors</div>
+            <div className="text-sm dynamic-text-shadow">Collectors</div>
           </div>
         </div>
       </div>

@@ -13,17 +13,7 @@ const Holdings = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 mt-4">
         {nftsOwned.map((data) => (
-          <PreviewDrop
-            key={data.id}
-            data={{
-              slug: "/",
-              track: {
-                name: "The hill",
-                cover: data.image,
-                artist: { cover: data.image, name: "The weekend" },
-              },
-            }}
-          />
+          <PreviewDrop key={data.id} data={data.drop} />
         ))}
       </div>
     </div>

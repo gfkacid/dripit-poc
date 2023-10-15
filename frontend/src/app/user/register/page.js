@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Formik } from "formik";
 import { Button, Checkbox, Label, TextInput, FileInput } from "flowbite-react";
 import { FaEnvelope, FaAt } from "react-icons/fa6";
@@ -10,11 +10,128 @@ import { selectEoa, selectWeb3AuthPack } from "@/store/safe-global/selectors";
 import { getPublicCompressed } from "@toruslabs/eccrypto";
 import { registerUser } from "@/store/auth/actions";
 
+import { GelatoRelayPack } from "@safe-global/relay-kit";
+import { ethers } from "ethers";
+import Safe, { EthersAdapter, SafeFactory } from "@safe-global/protocol-kit";
+import { setSelectedSafe } from "@/store/safe-global/slice";
+import { redirect } from "next/navigation";
+import { selectUserRegistrationIsPending } from "@/store/auth/selectors";
+
 const Register = () => {
   const web3AuthPack = useSelector(selectWeb3AuthPack);
   const eoa = useSelector(selectEoa);
+  const userRegistrationIsPending = useSelector(
+    selectUserRegistrationIsPending
+  );
   const dispatch = useDispatch();
   const [registrationError, setRegistrationError] = useState(false);
+
+  const predictSafeAddress = useCallback(
+    async ({ signer, ethAdapter }) => {
+      if (web3AuthPack) {
+        const safeFactory = await SafeFactory.create({
+          ethAdapter,
+          contractNetworks: ["0x5"],
+        });
+
+        console.log("1 safeFactory", safeFactory);
+
+        const safeAccountConfig = {
+          owners: [await signer.getAddress()],
+          threshold: 1,
+        };
+
+        console.log("2 safeAccountConfig", safeAccountConfig);
+
+        const predictedSafeAddress = await safeFactory.predictSafeAddress(
+          safeAccountConfig
+        );
+
+        console.log("3 predictedSafeAddress", predictedSafeAddress);
+
+        return { predictedSafeAddress, safeAccountConfig };
+      }
+    },
+    [web3AuthPack]
+  );
+
+  const deploySafeContract = useCallback(
+    async ({ app_scoped_privkey }) => {
+      try {
+        console.log(web3AuthPack.getProvider());
+
+        const provider = new ethers.providers.JsonRpcProvider(
+          "https://rpc.ankr.com/eth_goerli"
+        );
+
+        console.log("00 provider", provider);
+
+        const signer = new ethers.Wallet(app_scoped_privkey, provider);
+
+        console.log("00 signer", signer);
+
+        // const signer = web3AuthPack.getProvider().getSigner();
+        const ethAdapter = new EthersAdapter({
+          ethers,
+          signerOrProvider: signer,
+        });
+
+        console.log("00 ethAdapter", ethAdapter);
+
+        const { predictedSafeAddress, safeAccountConfig } =
+          await predictSafeAddress({ signer, ethAdapter });
+
+        console.log("4 predictedSafeAddress", predictedSafeAddress);
+
+        const safeSDK = await Safe.create({
+          ethAdapter,
+          predictedSafe: { safeAccountConfig },
+          contractNetworks: ["0x5"],
+        });
+
+        console.log("5 safeSDK", safeSDK);
+
+        const relayKit = new GelatoRelayPack(
+          process.env.NEXT_PUBLIC_GELATO_API_KEY
+        );
+
+        // Create a transactions array with one transaction object
+        const transactions = [
+          { to: predictedSafeAddress, data: "0x", value: 0 },
+        ];
+        const options = { isSponsored: true };
+
+        const safeTransaction = await relayKit.createRelayedTransaction({
+          safe: safeSDK,
+          transactions,
+          options,
+        });
+
+        console.log("6 safeTransaction", safeTransaction);
+
+        const signedSafeTransaction = await safeSDK.signTransaction(
+          safeTransaction
+        );
+
+        console.log("7 signedSafeTransaction", signedSafeTransaction);
+
+        const response = await relayKit.executeRelayTransaction(
+          signedSafeTransaction,
+          safeSDK,
+          options
+        );
+
+        console.log(
+          `Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
+        );
+
+        return { predictedSafeAddress };
+      } catch (error) {
+        throw error;
+      }
+    },
+    [predictSafeAddress, web3AuthPack]
+  );
 
   const handleSubmit = useCallback(
     async (values, { setSubmitting }) => {
@@ -26,6 +143,13 @@ const Register = () => {
       }
 
       try {
+        const app_scoped_privkey = await web3AuthPack.getProvider()?.request({
+          method: "eth_private_key", // use "private_key" for other non-evm chains
+        });
+        const { predictedSafeAddress } = await deploySafeContract({
+          app_scoped_privkey,
+        });
+
         const { agree, image, ...formValues } = values;
 
         const formData = new FormData();
@@ -36,19 +160,22 @@ const Register = () => {
         if (image?.length) formData.append("image", image[0]);
 
         // Incase of secp256k1 curve, get the app_pub_key
-        const app_scoped_privkey = await web3AuthPack.getProvider()?.request({
-          method: "eth_private_key", // use "private_key" for other non-evm chains
-        });
+
         const app_pub_key = getPublicCompressed(
           Buffer.from(app_scoped_privkey.padStart(64, "0"), "hex")
         ).toString("hex");
 
         formData.append("app_pub_key", app_pub_key);
         formData.append("eoa", eoa);
+        formData.append("safe", predictedSafeAddress);
 
         const res = await dispatch(registerUser(formData)).unwrap();
 
+        dispatch(setSelectedSafe(predictedSafeAddress));
+
         console.log("res", res);
+
+        redirect("/");
       } catch (error) {
         console.log("error", error);
         setRegistrationError(true);
@@ -56,8 +183,12 @@ const Register = () => {
 
       setSubmitting(false);
     },
-    [dispatch, eoa, web3AuthPack]
+    [deploySafeContract, dispatch, eoa, web3AuthPack]
   );
+
+  useEffect(() => {
+    if (!userRegistrationIsPending) redirect("/");
+  }, [userRegistrationIsPending]);
 
   return (
     <div

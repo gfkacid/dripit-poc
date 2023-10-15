@@ -11,12 +11,7 @@ const About = () => {
   return (
     <div className="border-t border-gray pt-10 mt-10">
       <h3 className="antialiased font-semibold">About the track</h3>
-      <p className="mt-4 antialiased font-light mb-10">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent lacus
-        erat, ullamcorper vitae ultricies at, dictum et dui. Donec luctus nunc
-        nisl, nec condimentum eros euismod ac. Nam sollicitudin, nisi eget
-        accumsan posuere, tellus ex iaculis lorem, at dignissim mi mi nec neque.
-      </p>
+      <p className="mt-4 antialiased font-light mb-10">{track?.about ?? ""}</p>
 
       <div className="flex items-center">
         <div className="w-24 h-24 rounded-lg relative">

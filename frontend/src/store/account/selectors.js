@@ -1,14 +1,17 @@
 const selectAccountReducer = (state) => state.account;
 
-export const selectAccountName = (state) => selectAccountReducer(state)?.name;
+export const selectAccountUser = (state) => selectAccountReducer(state)?.user;
+
+export const selectAccountName = (state) =>
+  selectAccountUser(state)?.username ?? "";
 
 export const selectAccountNameInitials = (state) =>
   (selectAccountName(state) || "")?.slice(0, 2).toUpperCase();
 
 export const selectAccountProfileImage = (state) =>
-  selectAccountReducer(state)?.profileImage;
+  selectAccountUser(state)?.image ?? "";
 
-export const selectAccountEmail = (state) => selectAccountReducer(state)?.email;
+export const selectAccountEmail = (state) => selectAccountUser(state)?.email;
 
 export const selectAccountIdToken = (state) =>
   selectAccountReducer(state)?.idToken;

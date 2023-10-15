@@ -1,6 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { post } from "@/utils/api";
-import { loginUser, setAuthIsPending } from "./slice";
+import {
+  loginUser,
+  setAuthIsPending,
+  setUserRegistrationIsPending,
+} from "./slice";
 import { setUserInfo } from "../account/slice";
 import { selectAccountIdToken } from "../account/selectors";
 
@@ -37,8 +41,10 @@ export const registerUser = createAsyncThunk(
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
       });
-      // dispatch(loginUser(token));
-      // dispatch(setUserInfo(res.data));
+      dispatch(loginUser(token));
+      dispatch(setUserInfo(res.data));
+      dispatch(setAuthIsPending(false));
+      dispatch(setUserRegistrationIsPending(false));
 
       return res.data;
     } catch (error) {

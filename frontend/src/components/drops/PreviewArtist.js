@@ -16,10 +16,12 @@ const PreviewArtist = ({ artist, track, className = "" }) => {
         />
       </div>
       <div className="whitespace-nowrap overflow-hidden relative px-3">
-        <p className="antialiased font-semibold text-2xl">
+        <p className="antialiased font-semibold text-2xl dynamic-text-shadow">
           {_get(track, "name", "")}
         </p>
-        <p className="text-lg text-white mt-2">{_get(artist, "name", "-")}</p>
+        <p className="text-lg text-white mt-2 dynamic-text-shadow">
+          {_get(artist, "name", "-")}
+        </p>
       </div>
     </div>
   );

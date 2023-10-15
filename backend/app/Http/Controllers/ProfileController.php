@@ -10,10 +10,18 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-    public function show($handle){
+    public function show($handle='collector'){
 
-        $user = User::where('username',$handle)->withCount('nfts_owned as tokens_count')->firstOrFail();
-        $user->load(['nfts_owned.drop.track.artist']);
+        $user = User::where('username',$handle)->with([
+            'nfts_owned:id,image,token_id,drop_id,owner_id',
+            'nfts_owned.drop:id,slug,track_id',
+            'nfts_owned.drop.track:id,name,artist_id',
+            'nfts_owned.drop.track.artist:id,name,handle',
+            'transactions' => function($q){
+                return $q->with(['nft:id,token_id,drop_id','nft.drop:id,track_id','nft.drop.track:id,name']);
+            }])
+            ->withCount('nfts_owned as tokens_count')
+            ->firstOrFail();
         $user->artists_count = Artist::selectRaw('COUNT(DISTINCT artists.id) as count')
             ->join('tracks', 'artists.id', '=', 'tracks.artist_id')
             ->join('drops', 'tracks.id', '=', 'drops.track_id')

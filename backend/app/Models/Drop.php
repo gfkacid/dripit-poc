@@ -27,9 +27,9 @@ class Drop extends Model
         'laravel_through_key'
     ];
 
-    protected $casts = [
-        'extras' => 'array',
-    ];
+//    protected $casts = [
+//        'extras' => 'array',
+//    ];
 
 //    protected function extras(): Attribute
 //    {

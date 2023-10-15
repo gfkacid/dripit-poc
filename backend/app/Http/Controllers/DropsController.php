@@ -13,9 +13,10 @@ class DropsController extends Controller
         return response()->json($drops);
     }
 
-    public function show($slug){
+    public function show($slug='blinded-by-the-light'){
         if(empty($slug))return new ModelNotFoundException('Drop not found');
         $drop = Drop::where('slug',$slug)->with(['track.artist.latestExtras','collectors'])->first();
+        $drop->extras = json_decode($drop->extras,true);
         return $drop;
     }
 

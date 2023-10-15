@@ -6,7 +6,7 @@ import Collectors from "@/components/landing/Collectors";
 
 async function getLandingData() {
   const entities = [
-    { path: "slider", key: "slider" },
+    { path: "slider", key: "slides" },
     { path: "latest-drops", key: "drops" },
     { path: "latest-activity", key: "activity" },
     { path: "top-collectors", key: "collectors" },

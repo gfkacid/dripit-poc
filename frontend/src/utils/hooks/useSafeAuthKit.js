@@ -12,6 +12,7 @@ import {
   toogleAuthModal,
   logoutUser,
   setAuthIsPending,
+  setUserRegistrationIsPending,
 } from "@/store/auth/slice";
 import { verifyLoggedInUser } from "@/store/auth/actions";
 import { setUserInfo } from "@/store/account/slice";
@@ -43,8 +44,21 @@ function useSafeAuthKit() {
   const dispatch = useDispatch();
   const pathname = usePathname();
 
-  const connectedHandler = (data) => console.log("CONNECTED", data);
-  const disconnectedHandler = (data) => console.log("DISCONNECTED", data);
+  const connectedHandler = useCallback(
+    (data) => {
+      console.log("CONNECTED", data);
+      dispatch(setAuthIsPending(true));
+    },
+    [dispatch]
+  );
+
+  const disconnectedHandler = useCallback(
+    (data) => {
+      console.log("DISCONNECTED", data);
+      dispatch(setAuthIsPending(false));
+    },
+    [dispatch]
+  );
 
   const logoutCleanup = useCallback(() => {
     if (isAuthenticated && !web3AuthModalPack.getProvider()) {
@@ -148,9 +162,11 @@ function useSafeAuthKit() {
         modalPack.unsubscribe(ADAPTER_EVENTS.DISCONNECTED, disconnectedHandler);
       };
     })();
-  }, [dispatch]);
+  }, [disconnectedHandler, connectedHandler, dispatch]);
 
   const authenticateUser = useCallback(async () => {
+    if (!web3AuthModalPack) return;
+
     const signInInfo = await web3AuthModalPack.signIn();
     console.log("SIGN IN RESPONSE: ", signInInfo);
 
@@ -160,6 +176,10 @@ function useSafeAuthKit() {
     dispatch(setSafeAuthSignInResponse(signInInfo));
     dispatch(setUserInfo(userInfo || undefined));
     dispatch(setProvider(web3AuthModalPack.getProvider()));
+
+    if (signInInfo?.safes?.length) {
+      dispatch(setSelectedSafe(signInInfo?.safes[0]));
+    }
 
     return { userInfo, signInInfo };
   }, [dispatch, web3AuthModalPack]);
@@ -185,7 +205,6 @@ function useSafeAuthKit() {
     if (!web3AuthModalPack) return;
 
     try {
-      dispatch(setAuthIsPending(true));
       const { userInfo, signInInfo } = await authenticateUser();
 
       if (signInInfo && userInfo) {
@@ -199,20 +218,6 @@ function useSafeAuthKit() {
         logout();
         dispatch(setAuthIsPending(false));
       }
-
-      // // Incase of secp256k1 curve, get the app_pub_key
-      // const app_scoped_privkey = await web3AuthModalPack
-      //   .getProvider()
-      //   ?.request({
-      //     method: "eth_private_key", // use "private_key" for other non-evm chains
-      //   });
-      // const app_pub_key = getPublicCompressed(
-      //   Buffer.from(app_scoped_privkey.padStart(64, "0"), "hex")
-      // ).toString("hex");
-
-      // const { idToken } = userInfo;
-
-      // dispatch(verifyLoggedInUser({ token: idToken, app_pub_key })).unwrap();
     } catch (error) {
       console.error(error);
       logout();
@@ -237,12 +242,20 @@ function useSafeAuthKit() {
   }, [isAuthenticated, logoutCleanup, web3AuthModalPack]);
 
   useEffect(() => {
+    if (
+      web3AuthModalPack &&
+      !web3AuthModalPack.getProvider() &&
+      userRegistrationIsPending
+    ) {
+      dispatch(setUserRegistrationIsPending(false));
+    }
+  }, [dispatch, userRegistrationIsPending, web3AuthModalPack]);
+
+  useEffect(() => {
     if (authModalIsOpen && web3AuthModalPack) showLoginPopup();
   }, [authModalIsOpen, showLoginPopup, web3AuthModalPack]);
 
   useEffect(() => {
-    console.log("pathname ", pathname);
-
     if (userRegistrationIsPending && !pathname.includes("user/register")) {
       redirect("/user/register");
     }
