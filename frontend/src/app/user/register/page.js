@@ -16,6 +16,13 @@ import Safe, { EthersAdapter, SafeFactory } from "@safe-global/protocol-kit";
 import { setSelectedSafe } from "@/store/safe-global/slice";
 import { redirect } from "next/navigation";
 import { selectUserRegistrationIsPending } from "@/store/auth/selectors";
+import {
+  loginUser,
+  setAuthIsPending,
+  setUserRegistrationIsPending,
+} from "@/store/auth/slice";
+import { setUserInfo } from "@/store/account/slice";
+import _get from "lodash/get";
 
 const Register = () => {
   const web3AuthPack = useSelector(selectWeb3AuthPack);
@@ -61,7 +68,7 @@ const Register = () => {
         console.log(web3AuthPack.getProvider());
 
         const provider = new ethers.providers.JsonRpcProvider(
-          "https://rpc.ankr.com/eth_goerli"
+          process.env.NEXT_PUBLIC_RPC_URL
         );
 
         console.log("00 provider", provider);
@@ -177,8 +184,29 @@ const Register = () => {
 
         redirect("/");
       } catch (error) {
-        console.log("error", error);
-        setRegistrationError(true);
+        console.log(
+          "error",
+          error,
+          "--",
+          _get(error, "response.data.error", ""),
+          _get(error, "response.data.user")
+        );
+        if (
+          _get(error, "response.data.error", "")?.includes(
+            "already registered"
+          ) &&
+          _get(error, "response.data.user")
+        ) {
+          console.log("im here");
+          const user = _get(error, "response.data.user");
+
+          dispatch(loginUser(token));
+          dispatch(setUserInfo(user));
+          dispatch(setAuthIsPending(false));
+          dispatch(setUserRegistrationIsPending(false));
+        } else {
+          setRegistrationError(true);
+        }
       }
 
       setSubmitting(false);
@@ -228,7 +256,7 @@ const Register = () => {
           <form
             className="flex max-w-md w-full flex-col gap-4"
             onSubmit={handleSubmit}
-            enctype="multipart/form-data"
+            encType="multipart/form-data"
           >
             <div className="mb-3">
               <div className="mb-2 block">

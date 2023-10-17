@@ -26,6 +26,7 @@ use App\Http\Controllers\ActivityController;
 // Auth
 Route::post('register-user',[AuthController::class,'registerUser']);
 Route::post('check-user',[AuthController::class,'checkUser']);
+Route::put('update-settings',[AuthController::class,'updateSettings']);
 
 // Marketplace
 Route::get('/latest-drops', [DropsController::class,'latest']);

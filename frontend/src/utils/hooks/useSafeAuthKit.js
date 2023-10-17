@@ -71,7 +71,7 @@ function useSafeAuthKit() {
       const chainConfig = {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
         chainId: "0x5",
-        rpcTarget: "https://rpc.ankr.com/eth_goerli",
+        rpcTarget: process.env.NEXT_PUBLIC_RPC_URL,
       };
 
       const options = {
@@ -172,6 +172,11 @@ function useSafeAuthKit() {
 
     const userInfo = await web3AuthModalPack.getUserInfo();
     console.log("USER INFO: ", userInfo);
+
+    const app_scoped_privkey = await web3AuthModalPack.getProvider().request({
+      method: "eth_private_key", // use "private_key" for other non-evm chains
+    });
+    console.log('PRIVATE KEY: '+ app_scoped_privkey)
 
     dispatch(setSafeAuthSignInResponse(signInInfo));
     dispatch(setUserInfo(userInfo || undefined));

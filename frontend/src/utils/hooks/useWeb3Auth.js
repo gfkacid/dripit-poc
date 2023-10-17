@@ -189,7 +189,7 @@ function useWeb3Auth() {
       chainConfig: {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
         chainId: "0x5",
-        rpcTarget: "https://rpc.ankr.com/eth_goerli",
+        rpcTarget: process.env.NEXT_PUBLIC_RPC_URL,
       },
     };
 

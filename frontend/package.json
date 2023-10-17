@@ -11,6 +11,7 @@
   "dependencies": {
     "@monerium/sdk": "^2.6.1",
     "@reduxjs/toolkit": "^1.9.5",
+    "@safe-global/api-kit": "^1.3.1",
     "@safe-global/auth-kit": "^1.2.1",
     "@safe-global/onramp-kit": "^1.4.0",
     "@safe-global/protocol-kit": "^1.3.0",

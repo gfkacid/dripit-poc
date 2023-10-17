@@ -17,7 +17,7 @@ const About = () => {
         <div className="w-24 h-24 rounded-lg relative">
           <Image
             alt="artist"
-            src={artist?.cover}
+            src={track?.image}
             style={{ objectFit: "cover" }}
             className="h-full w-full rounded-lg"
             fill

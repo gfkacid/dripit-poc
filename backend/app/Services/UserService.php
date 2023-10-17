@@ -27,7 +27,7 @@ class UserService{
         if(isset($data['profileImage'])){
             return $data['profileImage'];
         }
-        return config('app.default_profile_image');
+        return asset(config('app.default_profile_image'));
     }
 
     private function appendRandomness($name){

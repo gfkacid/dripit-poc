@@ -8,7 +8,16 @@ const slice = createSlice({
   initialState: INITIAL_STATE,
   reducers: {
     setUserInfo: (state, { payload }) => {
-      state = { ...state, ...payload };
+      if (payload?.user) {
+        state.user = { ...payload?.user, isRegistered: true };
+      } else if (payload?.blockchain) {
+        state.blockchain = {
+          ...(state.blockchain ?? {}),
+          ...payload?.blockchain,
+        };
+      } else {
+        state.web3AuthUser = payload;
+      }
 
       return state;
     },

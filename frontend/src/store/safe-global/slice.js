@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   selectedSafe: null,
   provider: null,
   web3AuthPack: null,
+  moneriumClient: null,
 };
 
 const slice = createSlice({
@@ -28,6 +29,11 @@ const slice = createSlice({
     },
     setWeb3AuthPack: (state, { payload }) => {
       state.web3AuthPack = payload;
+
+      return state;
+    },
+    setMoneriumClient: (state, { payload }) => {
+      state.moneriumClient = payload;
 
       return state;
     },

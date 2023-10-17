@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('aggregate_verifier');
             $table->string('eoa');
             $table->string('safe');
+            $table->string('monerium_iban')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

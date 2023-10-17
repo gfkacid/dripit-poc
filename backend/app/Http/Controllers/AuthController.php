@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\UserService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
+use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
     /**
@@ -59,7 +61,7 @@ class AuthController extends Controller
                     $storagePath = public_path('media/users/' . $filename);
 
                     $image = Image::make($image);
-                    $image->fit(500, 500);
+                    $image->fit(300, 300);
                     $image->save($storagePath);
                     $assetPath = asset('media/users/'.$filename);
                 }else{
@@ -111,6 +113,47 @@ class AuthController extends Controller
            }
 
            return response()->json(['user' => $user, 'isRegistered' => $isRegistered],200);
+    }
+
+    public function updateSettings(Request $request)
+    {
+        $request->validate([
+            'email' => 'email',
+            'image' => 'image|mimes:jpeg,png,gif|max:5120', // Max size in kilobytes (5MB)
+        ]);
+
+        $token = $request->bearerToken();
+        $decodedJWT = (json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $token)[1])))));
+
+        $user = User::where('idToken',$token)->first();
+        if(empty($user) || $user->verifier_id != $decodedJWT['verifierId']){
+            return new ModelNotFoundException('User not found / token mismatch',500);
+        }
+        if($request->filled('monerium_iban')){
+            $user->monerium_iban = $request->input('monerium_iban');
+        }
+        if($request->filled('email')){
+            $user->email = $request->input('email');
+        }
+        // handle image upload
+        $image = $request->file('image');
+        if (!empty($image)) {
+            $oldImage = $user->image;
+            $filename = $user->username . '_' . time() . '.' . $image->getClientOriginalExtension();
+            $storagePath = public_path('media/users/' . $filename);
+
+            $image = Image::make($image);
+            $image->fit(300, 300);
+            $image->save($storagePath);
+            $assetPath = asset('media/users/' . $filename);
+            $user->image = $assetPath;
+            if($oldImage !== asset(config('app.default_profile_image'))){
+                unlink(public_path(config('app.default_profile_image')));
+            }
+        }
+        $user->save();
+
+        return response()->json(['user' => $user],200);
     }
 
 }

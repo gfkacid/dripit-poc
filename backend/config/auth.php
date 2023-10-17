@@ -112,6 +112,7 @@ return [
 
     'aggregate_identifiers' => [
         'web3auth-google-sapphire' => 'Google',
-
+        'tkey-google-lrc' => 'Google',
+        'tkey-auth0-email-passwordless-lrc' => 'Email'
     ],
 ];

@@ -57,6 +57,12 @@
         opacity: 0.8;
       }
     }
+
+    &[role="tab"] {
+      outline: none !important;
+      outline-offset: 0 !important;
+      box-shadow: none !important;
+    }
   }
 
   a {
@@ -89,6 +95,21 @@
   .dynamic-text-shadow {
     letter-spacing: 0.05em;
     text-shadow: 0.05em 0.05em 0px #d5d5d5, 0.1em 0.1em 0px rgba(0, 0, 0, 0.2);
+  }
+
+  .number-input {
+    justify-content: end;
+  }
+
+  .number-input input {
+    text-align: right;
+    width: 6rem;
+  }
+
+  .number-input input::-webkit-inner-spin-button,
+  .number-input input::-webkit-outer-spin-button {
+    opacity: 1;
+    margin-left: 0.5rem;
   }
 }
 

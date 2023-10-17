@@ -8,13 +8,14 @@ import {
 } from "@monerium/sdk";
 import { ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectIsAuthenticated } from "@/store/auth/selectors";
 import {
   selectAuthProvider,
   selectSelectedSafe,
   selectEoa,
 } from "@/store/safe-global/selectors";
+import { useSearchParams } from "next/navigation";
 
 const MONERIUM_TOKEN = "monerium_token";
 
@@ -24,6 +25,10 @@ const useSafeMoneriumPack = () => {
   const [moneriumClient, setMoneriumClient] = useState(null);
   const [moneriumPack, setMoneriumPack] = useState(null);
   const [orderState, setOrderState] = useState(null);
+
+  const searchParams = useSearchParams();
+  const linkWallet = searchParams.get("linkWallet");
+  const dispatch = useDispatch();
 
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const authProvider = useSelector(selectAuthProvider);
@@ -37,10 +42,9 @@ const useSafeMoneriumPack = () => {
   console.log("safe monerium moneriumClient", moneriumClient);
 
   const init = useCallback(async () => {
-    if (!authProvider || !safeAddress) return;
+    if (!isAuthenticated || !selectedSafe || !authProvider) return;
 
     const provider = new ethers.providers.Web3Provider(authProvider);
-
     const safeOwner = provider.getSigner();
     const ethAdapter = new EthersAdapter({
       ethers,
@@ -48,9 +52,8 @@ const useSafeMoneriumPack = () => {
     });
 
     const safeSdk = await Safe.create({
-      ethAdapter: ethAdapter,
-      // safeAddress: selectedSafe,
-      // safeAddress,
+      ethAdapter,
+      safeAddress: selectedSafe,
       isL1SafeMasterCopy: true,
     });
 
@@ -100,52 +103,43 @@ const useSafeMoneriumPack = () => {
     // console.log("safe owners", owners);
 
     // setSafeThreshold(`${threshold}/${owners.length}`);
-  }, [authProvider, safeAddress]);
-
-  // useEffect(() => {
-  //   const authCode =
-  //     new URLSearchParams(window.location.search).get("code") || undefined;
-  //   const refreshToken = localStorage.getItem(MONERIUM_TOKEN) || undefined;
-
-  //   if (authCode || refreshToken) startMoneriumFlow(authCode, refreshToken);
-  // }, [moneriumPack, startMoneriumFlow]);
+  }, [selectedSafe, authProvider, isAuthenticated]);
 
   const startMoneriumFlow = useCallback(
     async (authCode, refreshToken) => {
-      // if (!moneriumPack) return;
+      if (!moneriumPack) return;
 
       console.log("hellloooooooo");
 
       const moneriumClient = await moneriumPack.open({
-        redirectUrl: "http://localhost:3000/monerium",
-        // authCode,
-        refreshToken: localStorage.getItem(MONERIUM_TOKEN),
+        // redirectUrl: process.env.REACT_APP_MONERIUM_REDIRECT_URL,
+        redirectUrl: `${window.location.origin}/user/settings`,
+        authCode,
+        refreshToken,
       });
-
-      const authContext = await moneriumClient.getAuthContext();
-      const profile = await moneriumClient.getProfile(
-        authContext.defaultProfile
-      );
-      const balances = await moneriumClient.getBalances();
-      const orders = await moneriumClient.getOrders();
-
-      console.group("Monerium data");
-      console.log("AuthContext", authContext);
-      console.log("Profile", profile);
-      console.log("Balances", balances);
-      console.log("Orders", orders);
-      console.log("Bearer Profile", moneriumClient.bearerProfile);
-      console.groupEnd();
 
       if (moneriumClient.bearerProfile) {
         localStorage.setItem(
           MONERIUM_TOKEN,
           moneriumClient.bearerProfile.refresh_token
         );
+
+        const authContext = await moneriumClient.getAuthContext();
+        const profile = await moneriumClient.getProfile(
+          authContext.defaultProfile
+        );
+        const iban = profile.accounts.find((account) => account.address === safeAddress && account.iban)?.iban ?? '';
+        console.log('IBAN: '+iban)
+        
+        // PUT API /user-settings `monerium_iban = iban`
+        // on success: display message "Your wallet is successfully linked with Monerium. You can top it up anytime here[https://sandbox.monerium.dev/accounts]"
+        // setMoneriumInfo(
+        //   getMoneriumInfo(safeSelected, authContext, profile, balances)
+        // );
       }
 
-      setMoneriumClient(moneriumClient);
-      setAuthContext(authContext);
+      // setMoneriumClient(moneriumClient);
+      // dispatch(setMoneriumClient(moneriumClient));
     },
     [moneriumPack]
   );
@@ -157,14 +151,26 @@ const useSafeMoneriumPack = () => {
   }, [moneriumPack]);
 
   useEffect(() => {
-    if (authProvider && safeAddress) init();
-  }, [init, authProvider, safeAddress]);
+    if (selectedSafe && isAuthenticated) init();
+  }, [init, selectedSafe, isAuthenticated]);
+
+  useEffect(() => {
+    if (linkWallet && moneriumPack) startMoneriumFlow();
+  }, [linkWallet, moneriumPack, startMoneriumFlow]);
+
+  useEffect(() => {
+    const authCode =
+      new URLSearchParams(window.location.search).get("code") || undefined;
+    const refreshToken = localStorage.getItem(MONERIUM_TOKEN) || undefined;
+
+    if (authCode || refreshToken) startMoneriumFlow(authCode, refreshToken);
+  }, [moneriumPack, startMoneriumFlow]);
 
   console.log("safeAddress", safeAddress);
 
   return {
     moneriumPack,
-    startMoneriumFlow,
+    moneriumClient,
   };
 };
 

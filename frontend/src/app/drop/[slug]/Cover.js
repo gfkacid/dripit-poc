@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import _get from "lodash/get";
 import PreviewArtist from "@/components/drops/PreviewArtist";
+// import PlaySampleAudio from "@/components/drops/PlaySampleAudio";
 
 function Cover() {
   const track = useSelector(selectDropTrack);
@@ -25,6 +26,8 @@ function Cover() {
         track={track}
         className="absolute bottom-10 left-10 text-white"
       />
+
+      {/* <PlaySampleAudio /> */}
     </div>
   );
 }

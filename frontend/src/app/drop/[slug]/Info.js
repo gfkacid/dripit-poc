@@ -45,7 +45,7 @@ const Info = () => {
         <div className="flex items-center mb-4">
           <div className="w-36">Price:</div>
           <div className="font-semibold">
-            $ <span className="text-lg">{displayPrice(drop?.price)}</span>
+            € <span className="text-lg">{displayPrice(drop?.price)}</span>
           </div>
         </div>
         {!isSoldOut ? (

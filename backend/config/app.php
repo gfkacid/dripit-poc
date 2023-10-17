@@ -213,6 +213,6 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
     ])->toArray(),
 
-    'default_profile_image' => public_path('media/users/user.png'),
+    'default_profile_image' => 'media/users/user.png',
 
 ];
