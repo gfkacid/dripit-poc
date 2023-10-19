@@ -7,6 +7,7 @@ import {
 import { useSelector } from "react-redux";
 import _get from "lodash/get";
 import BorderedBox from "@/components/generic/BorderedBox";
+import { FaBolt, FaHeadset } from "react-icons/fa6";
 
 const WhatYouGet = () => {
   const artist = useSelector(selectDropArtist);
@@ -27,15 +28,21 @@ const WhatYouGet = () => {
         <BorderedBox>
           <div className="font-semibold">Royalties</div>
           <div className="text-green font-bold font-mono mt-2">
-            {drop?.royalties_share}
+            {drop?.royalties_share / 100}%
           </div>
         </BorderedBox>
-        <BorderedBox>
-          <div className="font-semibold">First Dibs</div>
-        </BorderedBox>
-        <BorderedBox>
-          <div className="font-semibold">Virtual Event</div>
-        </BorderedBox>
+        {drop.extras.first_dibs && (
+          <BorderedBox>
+            <div className="font-semibold">First Dibs</div>
+            <FaBolt size={32} style={{ color: "#FFEB3B" }} />
+          </BorderedBox>
+        )}
+        {drop.extras.virtual_event && (
+          <BorderedBox>
+            <div className="font-semibold">Virtual Event</div>
+            <FaHeadset size={32} style={{ color: "#999" }} />
+          </BorderedBox>
+        )}
       </div>
     </div>
   );

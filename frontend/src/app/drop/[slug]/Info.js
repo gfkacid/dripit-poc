@@ -9,7 +9,8 @@ import Moment from "react-moment";
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectIsAuthenticated } from "@/store/auth/selectors";
-import BuyRoyalties from "./BuyRoyalties";
+import BuyTokens from "./BuyTokens";
+import Image from "next/image";
 import { displayPrice } from "@/utils/functions";
 
 const Info = () => {
@@ -45,14 +46,21 @@ const Info = () => {
         <div className="flex items-center mb-4">
           <div className="w-36">Price:</div>
           <div className="font-semibold">
-            € <span className="text-lg">{displayPrice(drop?.price)}</span>
+            <Image alt="eur" src={"/EURe.svg"} style={{display: 'inline-block'}} width={20} height={20} />
+            <span className="text-lg">{displayPrice(drop?.price)}</span>
+          </div>
+        </div>
+        <div className="flex items-center mb-4">
+          <div className="w-36">Supply:</div>
+          <div className="font-semibold">
+            <span className="text-lg">{drop?.supply} tokens</span>
           </div>
         </div>
         {!isSoldOut ? (
           <div className="flex items-center mb-4">
             <div className="w-36">Remaining:</div>
             <div className="font-semibold">
-              <strong>{drop?.minted}</strong>/{drop?.supply}
+              <strong>{drop?.supply - drop?.minted}</strong>/{drop?.supply}
             </div>
           </div>
         ) : (
@@ -61,7 +69,7 @@ const Info = () => {
 
         {isDropOpen && !isSoldOut && isAuthenticated ? (
           <div className="pt-4">
-            <BuyRoyalties />
+            <BuyTokens />
           </div>
         ) : null}
       </div>

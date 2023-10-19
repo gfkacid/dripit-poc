@@ -20,7 +20,7 @@ import {
 import { displayPrice } from "@/utils/functions";
 import _get from "lodash/get";
 
-const BuyRoyalties = () => {
+const BuyTokens = () => {
   // const { moneriumPack, startMoneriumFlow } = useSafeMoneriumPack();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const drop = useSelector(selectDropProfile);
@@ -137,4 +137,4 @@ const BuyRoyalties = () => {
   );
 };
 
-export default BuyRoyalties;
+export default BuyTokens;

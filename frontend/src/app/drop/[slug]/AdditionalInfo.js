@@ -1,18 +1,19 @@
 import React from "react";
 import _get from "lodash/get";
-import { selectDropTrack } from "@/store/drop/selectors";
+import { selectDropTrack,selectDropProfile } from "@/store/drop/selectors";
 import { useSelector } from "react-redux";
 import { Badge } from "flowbite-react";
 import {
   FaRegCalendarDays,
   FaMusic,
-  FaLocationDot,
+  FaFileLines,
   FaRegNewspaper,
 } from "react-icons/fa6";
 import Moment from "react-moment";
 
 const AdditionalInfo = () => {
   const track = useSelector(selectDropTrack);
+  const drop = useSelector(selectDropProfile);
 
   return (
     <div className="border-t border-gray pt-10 mt-10">
@@ -28,14 +29,18 @@ const AdditionalInfo = () => {
             ISRC: {_get(track, "isrc", "-")}
           </span>
         </Badge>
-        <Badge className="px-3" color="gray" icon={FaLocationDot} size="lg">
-          <span className="font-normal pl-4 leading-none">
-            Contract address
-          </span>
-        </Badge>
-        <Badge className="px-3" color="gray" icon={FaRegNewspaper} size="lg">
-          <span className="font-normal pl-4 leading-none">Legal</span>
-        </Badge>
+        <a href={'https://goerli.etherscan.io/address/'+drop.contract} target="_blank">
+          <Badge className="px-3" color="gray" icon={FaFileLines} size="lg">
+            <span className="font-normal pl-4 leading-none">
+              Contract address
+            </span>
+          </Badge>
+        </a>
+        <a href={drop.legal_url} target="_blank">
+          <Badge className="px-3" color="gray" icon={FaRegNewspaper} size="lg">
+            <span className="font-normal pl-4 leading-none">Legal</span>
+          </Badge>
+        </a>
       </div>
     </div>
   );

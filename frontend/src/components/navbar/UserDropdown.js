@@ -15,8 +15,11 @@ import {
   selectAccountNameInitials,
   selectAccountProfileImage,
 } from "@/store/account/selectors";
-import { FaUser, FaGear, FaWallet, FaRightFromBracket } from "react-icons/fa6";
-
+import {
+  selectSelectedSafe,
+} from "@/store/safe-global/selectors";
+import { FaCopy, FaUser, FaGear, FaWallet, FaRightFromBracket } from "react-icons/fa6";
+import { displayBlockchainAddress } from "@/utils/functions";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
@@ -29,6 +32,7 @@ export default function UserDropdown({ logout }) {
   const initials = useSelector(selectAccountNameInitials);
   const authIsPending = useSelector(selectAuthIsPending);
   const accountBalance = useSelector(selectAccountBalance);
+  const selectedSafe = useSelector(selectSelectedSafe);
 
   if (!isAuthenticated)
     return (
@@ -76,12 +80,16 @@ export default function UserDropdown({ logout }) {
       </Dropdown.Item>
       <Dropdown.Divider />
       <Dropdown.Item as="div" className="border-0 outline-none" icon={FaWallet}>
-        Wallet
+        <Image alt="safe" src={"/safe_icon.jpeg"} style={{display: 'inline-block', borderRadius: '50%'}} width={20} height={20} />
+        Wallet - {displayBlockchainAddress(selectedSafe)}
+        <span onClick={()=> {navigator.clipboard.writeText(selectedSafe)}}>
+          <FaCopy size={18} style={{ color: "#999" }} />
+        </span>
       </Dropdown.Item>
       <Dropdown.Header>
         <div className="flex items-center">
           <div className="relative flex items-center">
-            <Image alt="eur" src={"/eur.svg"} width={20} height={20} />
+            <Image alt="EURe" src={"/EURe.svg"} width={20} height={20} />
             <span className="pl-1 font-semibold">EURe</span>
           </div>
           <div className="flex-1 font-bold text-right">{accountBalance}</div>

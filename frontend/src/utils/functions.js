@@ -22,3 +22,17 @@ export const numberToStr = (number, decimalScale, minDecimalFraction) => {
 export const displayPrice = (price) => {
   return numberToStr(price / 100, 2, 2);
 };
+
+export const displayBlockchainAddress = (address) => {
+  if(!address) return '';
+  return address.toString().substring(0, 5) + '...' + address.substring(address.length - 4)
+}
+
+export const displaySocialNums = (num) => {
+  let formatted = num;
+  if(num >=1000){
+    const split = (num/1000).toString().split('.')
+    formatted = split[0] + (split[1] ? '.' + split[1][0]:'') + 'k'
+  }
+  return formatted.toString()
+}
