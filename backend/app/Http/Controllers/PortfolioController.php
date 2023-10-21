@@ -93,7 +93,7 @@ class PortfolioController extends Controller
         if(!$request->filled('drop_id')){
             return response()->json(['error' => 'missing drop id'],500);
         }
-        $drop = Drop::where('id',$drop_id)->with('track');
+        $drop = Drop::where('id',$drop_id)->with('track')->first();
         $token_ids = $request->input('token_ids');
         if(!$request->filled('token_ids')){
             return response()->json(['error' => 'missing token ids'],500);
