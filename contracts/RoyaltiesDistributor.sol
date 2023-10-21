@@ -1,69 +1,80 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./Drop.sol";
 
-contract RoyaltiesDistributor is AccessControl {
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+contract RoyaltiesDistributor {
+    address public owner;
 
-    // Mapping of collections to periods and claims
-    mapping(address => mapping(uint256 => bool)) public claimed;
+    struct RoyaltyRound {
+        address drop;          // Address of the Drop contract
+        uint256 periodStart;   // Unix timestamp for the period start
+        uint256 periodEnd;     // Unix timestamp for the period end
+        uint256 total;         // Total amount of tokens to be distributed
+        mapping(uint256 => bool) claimed; // Tracks claimed status for token IDs
+    }
 
-    // Registry of artists' wallet addresses
-    mapping(address => address) public artistRegistry;
+    event RoyaltyRoundCreated(address indexed drop, uint256 periodStart, uint256 periodEnd, uint256 total);
+    event RoyaltiesClaimed(address indexed holder, address indexed drop, uint256 period, uint256 tokenId);
 
-    // USDC token address
-    address public usdcTokenAddress;
+    mapping(uint256 => RoyaltyRound) public royaltyRounds;
+    uint256 public royaltyRoundCounter;
+    address public paymentToken;
 
-    constructor() {
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    constructor(address _paymentToken) {
+        owner = msg.sender;
+        paymentToken = _paymentToken;
     }
 
     function createRoyaltyRound(
-        address collection,
-        uint256 startTimestamp,
-        uint256 endTimestamp
-    ) external onlyRole(ADMIN_ROLE) {
-        // Deposit $USDC tokens for royalty round
-        // Ensure that the caller transfers the required amount of $USDC tokens
-        // ...
+        address drop,
+        uint256 periodStart,
+        uint256 periodEnd,
+        uint256 total
+    ) external onlyOwner {
+        require(periodStart < periodEnd, "Invalid period timestamps");
+        require(periodEnd > block.timestamp, "Period has already ended");
+        royaltyRoundCounter++;
+        
+        RoyaltyRound storage round = royaltyRounds[royaltyRoundCounter];
+        round.drop = drop;
+        round.periodStart = periodStart;
+        round.periodEnd = periodEnd;
+        round.total = total;
 
-        // Mark the round as created
-        // ...
+        // Deposit tokens to the contract
+        IERC20(paymentToken).transferFrom(msg.sender, address(this), total);
+
+        emit RoyaltyRoundCreated(drop, periodStart, periodEnd, total);
     }
 
-    function claimRoyalties(address collection, uint256 period) external {
-        // Check if the claimant has not already claimed for this period
-        require(!claimed[collection][period], "Already claimed");
 
-        // Perform the royalty claim and transfer $USDC tokens
-        // ...
+    function claim(uint256 period, address safeWallet) external {
+        require(period > 0 && period <= royaltyRoundCounter, "Invalid royalty period");
+        RoyaltyRound storage round = royaltyRounds[period];
+        require(round.total > 0, "No tokens to distribute for this period");
 
-        // Mark the round as claimed by the claimant
-        claimed[collection][period] = true;
+        Drop dropContract = Drop(round.drop);
+        uint256 tokenCount = dropContract.balanceOf(safeWallet);
+        if(tokenCount>0){
+            uint256 totalSupply = dropContract.totalSupply();
+            uint256 tokensToClaim = 0;
+            for (uint256 i = 0; i < tokenCount; i++) {
+                uint256 tokenId = dropContract.tokenOfOwnerByIndex(safeWallet, i);
+                if (!round.claimed[tokenId]) {
+                    round.claimed[tokenId] = true;
+                    tokensToClaim++;
+                    emit RoyaltiesClaimed(safeWallet, round.drop, period, tokenId);
+                }
+            }
+            uint256 royalties = (round.total * tokensToClaim) / totalSupply;
+            IERC20(paymentToken).transfer(safeWallet, royalties);
+        }
+        
     }
 
-    function adminClaimRoyalties(
-        address collection,
-        uint256 period,
-        address recipient
-    ) external onlyRole(ADMIN_ROLE) {
-        // Check if the claimant has not already claimed for this period
-        require(!claimed[collection][period], "Already claimed");
-
-        // Perform the royalty claim and transfer $USDC tokens to the recipient
-        // ...
-
-        // Mark the round as claimed by the claimant
-        claimed[collection][period] = true;
-    }
-
-    // Other functions for artist registration and management
-    // ...
-
-    // Function to deposit $USDC tokens
-    function depositUSDC(uint256 amount) external {
-        IERC20(usdcTokenAddress).transferFrom(msg.sender, address(this), amount);
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not owner");
+        _;
     }
 }

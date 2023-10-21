@@ -1,14 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
-
-import "@openzeppelin/contracts/access/AccessControl.sol";
+pragma solidity ^0.8.20;
 
 // Import the interface for the Drop contract
 import "./Drop.sol";
 
-contract DropFactory is AccessControl {
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-
+contract DropFactory {
+    address public owner;
     event DropCreated(string indexed slug, address indexed dropAddress);
 
     // Registry of deployed Drop contract addresses, lookup by slug
@@ -17,35 +14,30 @@ contract DropFactory is AccessControl {
 
     constructor(address _paymentToken) {
         paymentToken = _paymentToken;
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        owner = msg.sender;
     }
 
     function createDrop(
         string memory name,
         string memory slug,
-        string memory artist,
-        uint256 tierCount, // how many tiers this drop have
-        uint256[] memory tierPrices, // the price for each tier
-        uint256[] memory tierSupplies, // supply for each tier
-        uint256[] memory streamingRoyaltyShares, // for 1% input 100 , for 0.01% input 1
-        string[] memory ipfsImageLinks, // ipfs uri for the NFT image corresponding to each tier
+        string memory ipfsURI,
         uint256 mintStart,
-        uint256 mintEnd
-    ) external onlyRole(ADMIN_ROLE) {
+        uint256 mintEnd,
+        uint256 price,
+        uint256 maxSupply
+    ) external onlyOwner {
         // Deploy a new Drop contract and get its address
         address newDropAddress = address(
             new Drop(
                 name,
                 slug,
-                artist,
-                tierCount,
-                tierPrices,
-                tierSupplies,
-                streamingRoyaltyShares,
-                ipfsImageLinks,
+                ipfsURI,
                 mintStart,
                 mintEnd,
-                paymentToken
+                //paymentToken
+                price,
+                maxSupply,
+                owner
             )
         );
 
@@ -53,6 +45,11 @@ contract DropFactory is AccessControl {
         dropRegistry[slug] = newDropAddress;
 
         emit DropCreated(slug, newDropAddress);
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not owner");
+        _;
     }
 
 }
