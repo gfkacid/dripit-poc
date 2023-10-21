@@ -90,8 +90,9 @@ return new class extends Migration
 
         });
 
-        Schema::create('royalties', function (Blueprint $table) {
+        Schema::create('royalty_rounds', function (Blueprint $table) {
             $table->id();
+            $table->integer('royalty_round_id');
             $table->unsignedInteger('amount'); //in cents
             $table->date('period_start');
             $table->date('period_end');
@@ -109,10 +110,10 @@ return new class extends Migration
             $table->unsignedInteger('value_usd')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('nft_id')->nullable();
-            $table->unsignedBigInteger('royalties_id')->nullable();
+            $table->unsignedBigInteger('royalty_round_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('nft_id')->references('id')->on('nfts');
-            $table->foreign('royalties_id')->references('id')->on('royalties');
+            $table->foreign('royalty_round_id')->references('id')->on('royalty_rounds');
             $table->timestamps();
         });
 
@@ -128,7 +129,7 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('transactions');
-        Schema::dropIfExists('royalties');
+        Schema::dropIfExists('royalty_rounds');
         Schema::dropIfExists('nfts');
         Schema::dropIfExists('drops');
         Schema::dropIfExists('tracks');

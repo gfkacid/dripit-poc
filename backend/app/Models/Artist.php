@@ -24,10 +24,4 @@ class Artist extends Model
         return $this->hasMany(ArtistExtras::class,'artist_id')->latest('date')->take(1);
     }
 
-//    public function drops()
-//    {
-//
-//    }
-
-
 }

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SliderController;
 use App\Http\Controllers\StripeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +28,7 @@ use App\Http\Controllers\ActivityController;
 // Auth
 Route::post('register-user',[AuthController::class,'registerUser']);
 Route::post('check-user',[AuthController::class,'checkUser']);
-Route::put('update-settings',[AuthController::class,'updateSettings']);
+Route::post('update-settings',[AuthController::class,'updateSettings']);
 
 // Marketplace
 Route::get('/latest-drops', [DropsController::class,'latest']);
@@ -35,11 +37,12 @@ Route::get('/top-collectors', [ActivityController::class,'topCollectors']);
 Route::get('/drop/{slug}', [DropsController::class,'show']);
 Route::get('/artist/{handle}', [ArtistsController::class,'show']);
 Route::get('/profile/{handle}',[ProfileController::class,'show']);
-Route::get('/slider',[\App\Http\Controllers\SliderController::class,'slider']);
-Route::get('');
+Route::get('/slider',[SliderController::class,'slider']);
 
 // Payments
 Route::post('/stripe-session',[StripeController::class,'startSession']);
 
 // Authorized
-Route::get('/portfolio',[]);
+Route::get('/portfolio',[PortfolioController::class,'show']);
+Route::post('/claim',[PortfolioController::class,'claim']);
+Route::post('/mint',[PortfolioController::class,'mintToken']);

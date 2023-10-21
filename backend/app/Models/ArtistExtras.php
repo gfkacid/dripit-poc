@@ -16,6 +16,4 @@ class ArtistExtras extends Model
         return $this->belongsTo(Artist::class,'artist_id');
     }
 
-
-
 }

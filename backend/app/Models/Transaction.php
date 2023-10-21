@@ -7,8 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
+    protected $fillable = [
+        'hash',
+        'type',
+        'date',
+        'user_id',
+        'nft_id',
+        'value_usd',
+        'royalty_round_id',
+    ];
     use HasFactory;
-
     public function user(){
         return $this->belongsTo(User::class);
     }
@@ -17,7 +25,7 @@ class Transaction extends Model
         return $this->belongsTo(NFT::class);
     }
 
-//    public function royalties(){
-//        return $this->belongsTo(::class);
-//    }
+    public function royaltyRound(){
+        return $this->belongsTo(RoyaltyRound::class);
+    }
 }

@@ -14,6 +14,15 @@ class NFT extends Model
         'laravel_through_key'
     ];
 
+    protected $fillable = [
+        'token_id',
+        'image',
+        'minted_at',
+        'drop_id',
+        'minted_by',
+        'owner_id',
+    ];
+
     public function drop()
     {
         return $this->belongsTo(Drop::class);

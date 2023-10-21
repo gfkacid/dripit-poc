@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
-use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
     /**
@@ -84,9 +83,7 @@ class AuthController extends Controller
                 return response()->json(['user'=>$user],200);
             }else{
                 return response()->json(['error'=> 'Token is valid but user is already registered!','user' => $user],500);
-
             }
-
         }
 
         return response()->json(['error' => 'Could not verify access token.'],500);
@@ -126,7 +123,7 @@ class AuthController extends Controller
         $decodedJWT = (json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $token)[1])))));
 
         $user = User::where('idToken',$token)->first();
-        if(empty($user) || $user->verifier_id != $decodedJWT['verifierId']){
+        if(empty($user) || $user->verifier_id != $decodedJWT->verifierId){
             return new ModelNotFoundException('User not found / token mismatch',500);
         }
         if($request->filled('monerium_iban')){

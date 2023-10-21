@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\RoyaltyRound;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -17,101 +18,101 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // USERS
-         \App\Models\User::create([
-             'username' => 'acid',
-             'email' => 'acid@gmail.com',
-             'image' => asset('media/users/user.png'),
-             'pubkey' => '',
-             'idToken' => '',
-             'verifier_id' => 'acid@gmail.com',
-             'aggregate_verifier' => 'tkey-google-lrc',
-             'eoa' => '',
-             'safe' => ''
-         ]);
-        \App\Models\User::create([
-            'username' => 'Broski',
-            'email' => 'broski@gmail.com',
-            'image' => asset('media/users/user.png'),
-            'pubkey' => '',
-            'idToken' => '',
-            'verifier_id' => 'broski@gmail.com',
-            'aggregate_verifier' => 'tkey-google-lrc',
-            'eoa' => '',
-            'safe' => ''
-        ]);
-        \App\Models\User::create([
-            'username' => 'rolo',
-            'email' => 'rolo@gmail.com',
-            'image' => asset('media/users/user.png'),
-            'pubkey' => '',
-            'idToken' => '',
-            'verifier_id' => 'rolo@gmail.com',
-            'aggregate_verifier' => 'tkey-google-lrc',
-            'eoa' => '',
-            'safe' => ''
-        ]);
-        \App\Models\User::create([
-            'username' => 'axl',
-            'email' => 'axl@gmail.com',
-            'image' => asset('media/users/user.png'),
-            'pubkey' => '',
-            'idToken' => '',
-            'verifier_id' => 'axl@gmail.com',
-            'aggregate_verifier' => 'tkey-google-lrc',
-            'eoa' => '',
-            'safe' => ''
-        ]);
-        \App\Models\User::create([
-            'username' => 'mee6',
-            'email' => 'mee6@gmail.com',
-            'image' => asset('media/users/user.png'),
-            'pubkey' => '',
-            'idToken' => '',
-            'verifier_id' => 'mee6@gmail.com',
-            'aggregate_verifier' => 'tkey-google-lrc',
-            'eoa' => '',
-            'safe' => ''
-        ]);
-        \App\Models\User::create([
-            'username' => 'pertubator',
-            'email' => 'pertubator@gmail.com',
-            'image' => asset('media/users/user.png'),
-            'pubkey' => '',
-            'idToken' => '',
-            'verifier_id' => 'pertubator@gmail.com',
-            'aggregate_verifier' => 'tkey-google-lrc',
-            'eoa' => '',
-            'safe' => ''
-        ]);
-        \App\Models\User::create([
-            'username' => 'dokken',
-            'email' => 'dokken@gmail.com',
-            'image' => asset('media/users/user.png'),
-            'pubkey' => '',
-            'idToken' => '',
-            'verifier_id' => 'dokken@gmail.com',
-            'aggregate_verifier' => 'tkey-google-lrc',
-            'eoa' => '',
-            'safe' => ''
-        ]);
-        \App\Models\User::create([
-            'username' => 'collector',
-            'email' => 'collector@gmail.com',
-            'image' => asset('media/users/user.png'),
-            'pubkey' => '',
-            'idToken' => '',
-            'verifier_id' => 'collector@gmail.com',
-            'aggregate_verifier' => 'tkey-google-lrc',
-            'eoa' => '',
-            'safe' => ''
-        ]);
+//         \App\Models\User::create([
+//             'username' => 'acid',
+//             'email' => 'acid@gmail.com',
+//             'image' => asset('media/users/user.png'),
+//             'pubkey' => '',
+//             'idToken' => '',
+//             'verifier_id' => 'acid@gmail.com',
+//             'aggregate_verifier' => 'tkey-google-lrc',
+//             'eoa' => '',
+//             'safe' => ''
+//         ]);
+//        \App\Models\User::create([
+//            'username' => 'Broski',
+//            'email' => 'broski@gmail.com',
+//            'image' => asset('media/users/user.png'),
+//            'pubkey' => '',
+//            'idToken' => '',
+//            'verifier_id' => 'broski@gmail.com',
+//            'aggregate_verifier' => 'tkey-google-lrc',
+//            'eoa' => '',
+//            'safe' => ''
+//        ]);
+//        \App\Models\User::create([
+//            'username' => 'rolo',
+//            'email' => 'rolo@gmail.com',
+//            'image' => asset('media/users/user.png'),
+//            'pubkey' => '',
+//            'idToken' => '',
+//            'verifier_id' => 'rolo@gmail.com',
+//            'aggregate_verifier' => 'tkey-google-lrc',
+//            'eoa' => '',
+//            'safe' => ''
+//        ]);
+//        \App\Models\User::create([
+//            'username' => 'axl',
+//            'email' => 'axl@gmail.com',
+//            'image' => asset('media/users/user.png'),
+//            'pubkey' => '',
+//            'idToken' => '',
+//            'verifier_id' => 'axl@gmail.com',
+//            'aggregate_verifier' => 'tkey-google-lrc',
+//            'eoa' => '',
+//            'safe' => ''
+//        ]);
+//        \App\Models\User::create([
+//            'username' => 'mee6',
+//            'email' => 'mee6@gmail.com',
+//            'image' => asset('media/users/user.png'),
+//            'pubkey' => '',
+//            'idToken' => '',
+//            'verifier_id' => 'mee6@gmail.com',
+//            'aggregate_verifier' => 'tkey-google-lrc',
+//            'eoa' => '',
+//            'safe' => ''
+//        ]);
+//        \App\Models\User::create([
+//            'username' => 'pertubator',
+//            'email' => 'pertubator@gmail.com',
+//            'image' => asset('media/users/user.png'),
+//            'pubkey' => '',
+//            'idToken' => '',
+//            'verifier_id' => 'pertubator@gmail.com',
+//            'aggregate_verifier' => 'tkey-google-lrc',
+//            'eoa' => '',
+//            'safe' => ''
+//        ]);
+//        \App\Models\User::create([
+//            'username' => 'dokken',
+//            'email' => 'dokken@gmail.com',
+//            'image' => asset('media/users/user.png'),
+//            'pubkey' => '',
+//            'idToken' => '',
+//            'verifier_id' => 'dokken@gmail.com',
+//            'aggregate_verifier' => 'tkey-google-lrc',
+//            'eoa' => '',
+//            'safe' => ''
+//        ]);
+//        \App\Models\User::create([
+//            'username' => 'collector',
+//            'email' => 'collector@gmail.com',
+//            'image' => asset('media/users/user.png'),
+//            'pubkey' => '',
+//            'idToken' => '',
+//            'verifier_id' => 'collector@gmail.com',
+//            'aggregate_verifier' => 'tkey-google-lrc',
+//            'eoa' => '',
+//            'safe' => ''
+//        ]);
 
         // ARTISTS
         \App\Models\Artist::create([
             'name' => 'L Professor',
             'handle' => 'L_professor',
-            'image' => asset('media/600x600.jpg'),
-            'cover' => asset('media/1800x540.jpg'),
+            'image' => asset('media/artists/L_Professor.jpeg'),
+            'cover' => asset('media/artists/L_Professor_cover.jpeg'),
             'bio' => 'L Professor: Music Producer and Founder @ SuBass Studio (Greece)
 Bass player @ INCO
 A&R @Jungle Juice Records',
@@ -123,8 +124,8 @@ A&R @Jungle Juice Records',
         \App\Models\Artist::create([
             'name' => 'ITPDWIP',
             'handle' => 'ITPDWIP',
-            'image' => asset('media/600x600.jpg'),
-            'cover' => asset('media/1800x540.jpg'),
+            'image' => asset('media/artists/ITPDWIP.jpg'),
+            'cover' => asset('media/artists/ITPDWIP_cover.jpg'),
             'bio' => 'Artist bio...',
             'spotify_id' => '4RTe3KTTeWj9bHtZ7dgJeN',
             'youtube_id' => '',
@@ -199,7 +200,7 @@ Artist of Capital Music Greece.
 ',
             'image' => asset('media/tracks/Special.jpg'),
             'cover' => asset('media/artists/Gio Melody Cover.jpeg'),
-            'isrc' => 'USKO11800221',
+            'isrc' => 'ushm82181401',
             'spotify_id' => '4hJThuPp1QkjvpW83nJFHF',
             'youtube_id' => '',
             'sample_url' => asset('media/tracks/Special ft. Gio Melody - TEASER .mp3'),
@@ -209,9 +210,9 @@ Artist of Capital Music Greece.
         \App\Models\Track::create([
             'name' => 'Blinded By The Light',
             'about' => '',
-            'image' => asset('media/600x600.jpg'),
-            'cover' => asset('media/1800x540.jpg'),
-            'isrc' => 'USKO11800222',
+            'image' => asset('media/tracks/blinded_by_the_light.jpg'),
+            'cover' => asset('media/tracks/blinded_by_the_light_cover.jpg'),
+            'isrc' => '-',
             'spotify_id' => '7zc0x7i8eouXg3ITulLbRr',
             'youtube_id' => '',
             'sample_url' => asset('media/sample.mp3'),
@@ -223,7 +224,7 @@ Artist of Capital Music Greece.
             'about' => '',
             'image' => asset('media/tracks/MPESAIII.png'),
             'cover' => asset('media/artists/NTM-cover.jpeg'),
-            'isrc' => 'USKO11800222',
+            'isrc' => 'QZB4J1856319',
             'spotify_id' => '7JztKGyQzL61eQXv0zGsEL',
             'youtube_id' => 'cKoroGQq_2o',
             'sample_url' => asset('media/tracks/MPESAIII_teaser.mp3'),
@@ -235,7 +236,7 @@ Artist of Capital Music Greece.
             'about' => '',
             'image' => asset('media/tracks/No Stress.png'),
             'cover' => asset('media/tracks/No Stress Cover.jpeg'),
-            'isrc' => 'USKO11800222',
+            'isrc' => 'GRSTY2202183',
             'spotify_id' => '2I5eu7ILTn1PUW9Kp6cq5G',
             'youtube_id' => '',
             'sample_url' => asset('media/tracks/No Stress - Nerom X L Professor  (Teaser).mp3'),
@@ -307,30 +308,36 @@ Artist of Capital Music Greece.
         ]);
 
         // NFTs
-        for($i=1;$i<=100;$i++){
-            $user = rand(1,8);
-            $date = Carbon::createFromDate('2023-09-01')->addDays(rand(0,9))->addSeconds(rand(0,86400));
-            \App\Models\NFT::create([
-                'token_id' => $i,
-                'image' => asset('media/tracks/Special.jpg'),
-                'minted_at' => $date,
-                'drop_id' => 1,
-                'minted_by' => $user,
-                'owner_id' => $user,
-            ]);
-            Transaction::create([
-                'hash' => '0x123',
-                'type' => 'mint',
-                'date' => $date,
-                'value_usd' => null,
-                'user_id' => $user,
-                'nft_id' => $i,
-                'royalties_id' => null,
-            ]);
-        }
+//        for($i=1;$i<=100;$i++){
+//            $user = rand(1,8);
+//            $date = Carbon::createFromDate('2023-09-01')->addDays(rand(0,9))->addSeconds(rand(0,86400));
+//            \App\Models\NFT::create([
+//                'token_id' => $i,
+//                'image' => asset('media/tracks/Special.jpg'),
+//                'minted_at' => $date,
+//                'drop_id' => 1,
+//                'minted_by' => $user,
+//                'owner_id' => $user,
+//            ]);
+//            Transaction::create([
+//                'hash' => '0x123',
+//                'type' => 'mint',
+//                'date' => $date,
+//                'value_usd' => null,
+//                'user_id' => $user,
+//                'nft_id' => $i,
+//                'royalty_round_id' => null,
+//            ]);
+//        }
 
         // ROYALTIES
-
+        RoyaltyRound::create([
+            'royalty_round_id' => 0,
+            'amount' => 20000,
+            'period_start' => '2023-09-01',
+            'period_end' => '2023-10-01',
+            'drop_id' => 1,
+        ]);
 
         // TRANSACTIONS
 

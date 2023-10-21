@@ -15,7 +15,7 @@ class ProfileController extends Controller
         $user = User::where('username',$handle)->with([
             'nfts_owned:id,image,token_id,drop_id,owner_id',
             'nfts_owned.drop:id,slug,track_id',
-            'nfts_owned.drop.track:id,name,artist_id',
+            'nfts_owned.drop.track:id,name,cover,artist_id',
             'nfts_owned.drop.track.artist:id,name,handle',
             'transactions' => function($q){
                 return $q->with(['nft:id,token_id,drop_id','nft.drop:id,track_id','nft.drop.track:id,name']);
