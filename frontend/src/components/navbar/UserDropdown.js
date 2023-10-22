@@ -15,13 +15,13 @@ import {
   selectAccountNameInitials,
   selectAccountProfileImage,
 } from "@/store/account/selectors";
-import {
-  selectSelectedSafe,
-} from "@/store/safe-global/selectors";
-import { FaCopy, FaUser, FaGear, FaWallet, FaRightFromBracket } from "react-icons/fa6";
+import { selectSelectedSafe } from "@/store/safe-global/selectors";
+import { FaUser, FaGear, FaRightFromBracket } from "react-icons/fa6";
 import { displayBlockchainAddress } from "@/utils/functions";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import SafeLogo from "../generic/SafeLogo";
+import CopyText from "../generic/CopyText";
 
 export default function UserDropdown({ logout }) {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -33,6 +33,7 @@ export default function UserDropdown({ logout }) {
   const authIsPending = useSelector(selectAuthIsPending);
   const accountBalance = useSelector(selectAccountBalance);
   const selectedSafe = useSelector(selectSelectedSafe);
+  const router = useRouter();
 
   if (!isAuthenticated)
     return (
@@ -50,6 +51,7 @@ export default function UserDropdown({ logout }) {
   return (
     <Dropdown
       inline
+      dismissOnClick={false}
       label={
         <Avatar
           alt="User settings"
@@ -65,26 +67,33 @@ export default function UserDropdown({ logout }) {
       </Dropdown.Header>
 
       <Dropdown.Item
+        as="div"
         className="border-0 outline-none"
         icon={FaUser}
-        onClick={() => redirect(`/user/${name}`)}
+        onClick={() => router.push(`/user/${name}`)}
       >
         Profile
       </Dropdown.Item>
       <Dropdown.Item
+        as="div"
         className="border-0 outline-none"
         icon={FaGear}
-        onClick={() => redirect("/user/settings")}
+        onClick={() => router.push(`/user/settings`)}
       >
         Settings
       </Dropdown.Item>
       <Dropdown.Divider />
-      <Dropdown.Item as="div" className="border-0 outline-none" icon={FaWallet}>
-        <Image alt="safe" src={"/safe_icon.jpeg"} style={{display: 'inline-block', borderRadius: '50%'}} width={20} height={20} />
-        Wallet - {displayBlockchainAddress(selectedSafe)}
-        <span onClick={()=> {navigator.clipboard.writeText(selectedSafe)}}>
-          <FaCopy size={18} style={{ color: "#999" }} />
+      <Dropdown.Item
+        as="div"
+        type="div"
+        className="border-0 outline-none flex items-center relative"
+        icon={SafeLogo}
+      >
+        <span className="pl-1 flex-1">
+          {displayBlockchainAddress(selectedSafe)}
         </span>
+
+        <CopyText text={selectedSafe} />
       </Dropdown.Item>
       <Dropdown.Header>
         <div className="flex items-center">
@@ -92,7 +101,9 @@ export default function UserDropdown({ logout }) {
             <Image alt="EURe" src={"/EURe.svg"} width={20} height={20} />
             <span className="pl-1 font-semibold">EURe</span>
           </div>
-          <div className="flex-1 font-bold text-right">{accountBalance}</div>
+          <div className="flex-1 pl-1 font-bold text-right truncate">
+            {accountBalance}
+          </div>
         </div>
       </Dropdown.Header>
       <Dropdown.Item

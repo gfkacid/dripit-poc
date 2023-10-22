@@ -30,7 +30,6 @@ function useBlockchain() {
         const balance = await tokenContract.balanceOf(selectedSafe);
 
         const balanceInEther = ethers.utils.formatEther(balance);
-        console.log(`Balance of ${selectedSafe}: ${balanceInEther} EURe`);
 
         dispatch(setUserInfo({ blockchain: { balance: balanceInEther } }));
       } catch (error) {

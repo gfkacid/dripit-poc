@@ -3,6 +3,7 @@ import Slides from "@/components/landing/Slides";
 import Drops from "@/components/landing/Drops";
 import Activity from "@/components/landing/Activity";
 import Collectors from "@/components/landing/Collectors";
+import Faq from "@/components/landing/Faq";
 
 async function getLandingData() {
   const entities = [
@@ -43,6 +44,7 @@ export default async function Home() {
         <Drops data={drops} />
         <Activity data={activity} />
         <Collectors data={collectors} />
+        <Faq />
       </div>
     </div>
   );

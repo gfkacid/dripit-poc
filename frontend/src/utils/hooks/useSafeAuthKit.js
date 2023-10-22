@@ -21,6 +21,7 @@ import {
   setSelectedSafe,
   setWeb3AuthPack,
   setProvider,
+  setAppScopedPrivkey,
 } from "@/store/safe-global/slice";
 import {
   ADAPTER_EVENTS,
@@ -46,7 +47,6 @@ function useSafeAuthKit() {
 
   const connectedHandler = useCallback(
     (data) => {
-      console.log("CONNECTED", data);
       dispatch(setAuthIsPending(true));
     },
     [dispatch]
@@ -54,7 +54,6 @@ function useSafeAuthKit() {
 
   const disconnectedHandler = useCallback(
     (data) => {
-      console.log("DISCONNECTED", data);
       dispatch(setAuthIsPending(false));
     },
     [dispatch]
@@ -168,19 +167,17 @@ function useSafeAuthKit() {
     if (!web3AuthModalPack) return;
 
     const signInInfo = await web3AuthModalPack.signIn();
-    console.log("SIGN IN RESPONSE: ", signInInfo);
 
     const userInfo = await web3AuthModalPack.getUserInfo();
-    console.log("USER INFO: ", userInfo);
 
     const app_scoped_privkey = await web3AuthModalPack.getProvider().request({
       method: "eth_private_key", // use "private_key" for other non-evm chains
     });
-    console.log('PRIVATE KEY: '+ app_scoped_privkey)
 
     dispatch(setSafeAuthSignInResponse(signInInfo));
     dispatch(setUserInfo(userInfo || undefined));
     dispatch(setProvider(web3AuthModalPack.getProvider()));
+    dispatch(setAppScopedPrivkey(app_scoped_privkey));
 
     if (signInInfo?.safes?.length) {
       dispatch(setSelectedSafe(signInInfo?.safes[0]));

@@ -21,7 +21,12 @@ export default function Page({ params }) {
     if (params.slug) dispatch(getDrop({ slug: params.slug }));
   }, [dispatch, params.slug]);
 
-  if (isLoading || !drop) return <PageLoader />;
+  if (
+    (!isLoading && !drop) ||
+    (isLoading && !drop) ||
+    (isLoading && drop && drop?.slug !== params.slug)
+  )
+    return <PageLoader />;
 
   return (
     <div className="pb-10">

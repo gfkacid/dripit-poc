@@ -12,6 +12,7 @@ import { selectIsAuthenticated } from "@/store/auth/selectors";
 import BuyTokens from "./BuyTokens";
 import Image from "next/image";
 import { displayPrice } from "@/utils/functions";
+import { Badge } from "flowbite-react";
 
 const Info = () => {
   const isDropOpen = useSelector(selectDropIsActive);
@@ -45,15 +46,21 @@ const Info = () => {
         </div>
         <div className="flex items-center mb-4">
           <div className="w-36">Price:</div>
-          <div className="font-semibold">
-            <Image alt="eur" src={"/EURe.svg"} style={{display: 'inline-block'}} width={20} height={20} />
-            <span className="text-lg">{displayPrice(drop?.price)}</span>
+          <div className="font-semibold flex items-center">
+            <Image
+              alt="eur"
+              src={"/EURe.svg"}
+              style={{ display: "inline-block" }}
+              width={20}
+              height={20}
+            />
+            <span className="ml-1">{displayPrice(drop?.price)}</span>
           </div>
         </div>
         <div className="flex items-center mb-4">
           <div className="w-36">Supply:</div>
           <div className="font-semibold">
-            <span className="text-lg">{drop?.supply} tokens</span>
+            <span>{drop?.supply} tokens</span>
           </div>
         </div>
         {!isSoldOut ? (
@@ -64,7 +71,9 @@ const Info = () => {
             </div>
           </div>
         ) : (
-          <div className="font-bold text-xl text-red-500">SOLD OUT</div>
+          <div className="flex items-center mb-4">
+            <Badge color="failure">SOLD OUT</Badge>
+          </div>
         )}
 
         {isDropOpen && !isSoldOut && isAuthenticated ? (

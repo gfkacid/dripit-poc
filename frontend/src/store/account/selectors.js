@@ -7,6 +7,9 @@ const selectAccountWeb3AuthUser = (state) =>
 const selectAccountBlockchain = (state) =>
   selectAccountReducer(state)?.blockchain;
 
+const selectAccountPortfolio = (state) =>
+  selectAccountReducer(state)?.portfolio;
+
 // --
 
 export const selectAccountName = (state) =>
@@ -26,7 +29,16 @@ export const selectAccountIdToken = (state) =>
   selectAccountWeb3AuthUser(state)?.idToken;
 
 // --
-export const selectAccountIBAN = (state) => selectAccountUser(state)?.monerium_iban;
+export const selectAccountIBAN = (state) =>
+  selectAccountUser(state)?.monerium_iban;
 
 export const selectAccountBalance = (state) =>
   selectAccountBlockchain(state)?.balance;
+
+//
+
+export const selectPortfolioIsLoading = (state) =>
+  selectAccountPortfolio(state)?.isLoading;
+
+export const selectPortfolioRoyalties = (state) =>
+  selectAccountPortfolio(state)?.royalties;

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useCallback, useEffect } from "react";
 import Slider from "react-slick";
 import PreviewActivity from "@/components/drops/PreviewActivity";
+import PageHeading from "../generic/PageHeading";
 
 const settings = {
   dots: false,
@@ -36,7 +37,7 @@ const settings = {
 
 const Activity = ({ data }) => {
   const dispatch = useDispatch();
-  const activity = useSelector((state) => data || selecLandingActivity(state));
+  const activity = useSelector((state) => selecLandingActivity(state));
 
   const fetchActivity = useCallback(
     () => dispatch(getlatestActivity()),
@@ -44,18 +45,18 @@ const Activity = ({ data }) => {
   );
 
   useEffect(() => {
-    // const interval = setInterval(fetchActivity, 5000);
-    // return () => clearInterval(interval);
+    const interval = setInterval(fetchActivity, 5000);
+    return () => clearInterval(interval);
   }, [dispatch, fetchActivity]);
 
-  if (!activity?.length) return null;
+  if (!data?.length) return null;
 
   return (
     <div className="mt-24 mb-24">
-      <h4 className="text-sm mb-10">_ ACTIVITY</h4>
+      <PageHeading>ACTIVITY</PageHeading>
 
       <Slider {...settings}>
-        {activity.map((activity, index) => (
+        {(activity?.length ? activity : data).map((activity, index) => (
           <div key={index}>
             <PreviewActivity activity={activity} />
           </div>

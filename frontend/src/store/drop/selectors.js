@@ -1,4 +1,4 @@
-import moment from "moment";
+import { dropHasEnded, dropIsActive, dropIsUpcoming } from "@/utils/functions";
 import { createSelector } from "reselect";
 
 const selectDropReducer = (state) => state.drop;
@@ -15,23 +15,16 @@ export const selectDropCollectors = (state) =>
 export const selectDropIsLoading = (state) =>
   selectDropReducer(state).isLoading;
 
-export const selectDropIsActive = createSelector(
-  selectDropProfile,
-  (drop) =>
-    drop?.starts_at &&
-    drop?.ends_at &&
-    moment().isAfter(drop?.starts_at) &&
-    moment().isBefore(drop?.ends_at)
+export const selectDropIsActive = createSelector(selectDropProfile, (drop) =>
+  dropIsActive(drop)
 );
 
-export const selectDropIsUpcoming = createSelector(
-  selectDropProfile,
-  (drop) => drop?.starts_at && moment(drop?.starts_at).isAfter(moment())
+export const selectDropIsUpcoming = createSelector(selectDropProfile, (drop) =>
+  dropIsUpcoming(drop)
 );
 
-export const selectDropHasEnded = createSelector(
-  selectDropProfile,
-  (drop) => drop?.ends_at && moment(drop?.ends_at).isBefore(moment())
+export const selectDropHasEnded = createSelector(selectDropProfile, (drop) =>
+  dropHasEnded(drop)
 );
 
 export const selectDropIsSoldOut = createSelector(

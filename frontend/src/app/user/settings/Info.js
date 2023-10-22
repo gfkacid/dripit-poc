@@ -6,11 +6,14 @@ import {
   selectAccountNameInitials,
   selectAccountProfileImage,
 } from "@/store/account/selectors";
+import { selectSelectedSafe } from "@/store/safe-global/selectors";
+import { displayBlockchainAddress } from "@/utils/functions";
 
 const Info = () => {
   const profileImage = useSelector(selectAccountProfileImage);
   const initials = useSelector(selectAccountNameInitials);
   const username = useSelector(selectAccountName);
+  const selectedSafe = useSelector(selectSelectedSafe);
 
   return (
     <div className="mb-10">
@@ -26,7 +29,9 @@ const Info = () => {
         />
         <div>
           <h1 className="text-2xl font-extrabold mt-0 mb-1">@{username}</h1>
-          <p className="text-gray font-sm">ashasisaiojsasasjiaosoij</p>
+          <p className="text-gray font-sm">
+            {displayBlockchainAddress(selectedSafe)}
+          </p>
         </div>
       </div>
     </div>

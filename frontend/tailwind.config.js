@@ -27,10 +27,16 @@ module.exports = {
           ...colors.red,
           DEFAULT: "var(--red)",
         },
+        green: {
+          ...colors.green,
+          DEFAULT: "var(--green)",
+        },
+        blue: {
+          ...colors.blue,
+          DEFAULT: "var(--blue)",
+        },
         black: "var(--black)",
-        blue: "var(--blue)",
         info: "var(--info)",
-        green: "var(--green)",
       },
     },
   },

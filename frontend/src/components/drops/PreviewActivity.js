@@ -26,7 +26,15 @@ const PreviewActivity = ({ activity }) => {
           <Link className="font-medium" href={`/user/${user.username}`}>
             @{user.username}
           </Link>{" "}
-          bought {track.name} by {activity.artist_name}
+          {activity.type=='mint' ? (
+            <>
+              bought {track.name} by {activity.artist_name}
+            </>
+          ) : (
+            <>
+              claimed {activity.usd_value} royalties from {track.name}
+            </>
+          )}
         </div>
         <div className="text-gray mt-1 text-xs">$10</div>
       </div>

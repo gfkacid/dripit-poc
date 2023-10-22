@@ -33,13 +33,13 @@ const WhatYouGet = () => {
         </BorderedBox>
         {drop.extras.first_dibs && (
           <BorderedBox>
-            <div className="font-semibold">First Dibs</div>
+            <div className="font-semibold mb-2">First Dibs</div>
             <FaBolt size={32} style={{ color: "#FFEB3B" }} />
           </BorderedBox>
         )}
         {drop.extras.virtual_event && (
           <BorderedBox>
-            <div className="font-semibold">Virtual Event</div>
+            <div className="font-semibold mb-2">Virtual Event</div>
             <FaHeadset size={32} style={{ color: "#999" }} />
           </BorderedBox>
         )}

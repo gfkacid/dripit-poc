@@ -39,3 +39,16 @@ export const getTopCollectors = createAsyncThunk(
     }
   }
 );
+
+export const getSlides = createAsyncThunk(
+  "GET_SLIDES",
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await get("/slider", params);
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);

@@ -11,3 +11,6 @@ export const selectEoa = (state) =>
 
 export const selectWeb3AuthPack = (state) =>
   selectsafeGlobalReducer(state)?.web3AuthPack;
+
+export const selectAppScopedPrivkey = (state) =>
+  selectsafeGlobalReducer(state)?.appScopedPrivkey;

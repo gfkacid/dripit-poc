@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class DropsController extends Controller
 {
     public function latest(){
-        $drops = Drop::where('published',1)->with(['track.artist'])->orderByDesc('starts_at')->limit(8)->get();
+        $drops = Drop::where('published',1)->with(['track.artist'])->orderBy('starts_at')->limit(8)->get();
         return response()->json($drops);
     }
 

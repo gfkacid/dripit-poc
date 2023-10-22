@@ -9,14 +9,7 @@ const getURL = (path, fullURL) =>
   getApiBaseUrl(path, fullURL) + (path.startsWith("/") ? path : "/" + path);
 
 const getAuthHeader = (headers = {}) => {
-  const persistedAuth = localStorage.getItem("persist:auth");
-  const token = persistedAuth ? JSON.parse(persistedAuth)?.token : null;
-
-  if (headers) return headers;
-
-  return token
-    ? { ...headers, Authorization: `Bearer ${token.replace(/"/g, "")}` }
-    : headers;
+  return headers;
 };
 
 const apiService = axios.create({});

@@ -1,3 +1,4 @@
+import { selectAccountIdToken } from "../account/selectors";
 const selectAuthReducer = (state) => state.auth;
 
 export const selectAuthIsInitialized = (state) =>
@@ -16,3 +17,9 @@ export const selectAuthIsPending = (state) =>
 
 export const selectUserRegistrationIsPending = (state) =>
   selectAuthReducer(state).userRegistrationIsPending;
+
+export const selectAuthHeaders = (state) => {
+  const token = selectAccountIdToken(state);
+
+  return { Authorization: `Bearer ${token}` };
+};

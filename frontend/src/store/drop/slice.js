@@ -11,9 +11,10 @@ const slice = createSlice({
   initialState: INITIAL_STATE,
   extraReducers: (builder) => {
     builder
-      .addCase(getDrop.pending, (state) => {
-        state.profile = null;
+      .addCase(getDrop.pending, (state, { meta }) => {
         state.isLoading = true;
+
+        if (meta.arg.slug !== state.profile?.slug) state.profile = null;
 
         return state;
       })

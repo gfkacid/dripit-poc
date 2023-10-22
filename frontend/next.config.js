@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "geniusolutions.gr",
+        hostname: "api.dripit.io",
         port: "",
         pathname: "/media/**",
       },

@@ -15,7 +15,8 @@ import {
   selectSelectedSafe,
   selectEoa,
 } from "@/store/safe-global/selectors";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
+import { updateUserSettings } from "@/store/account/actions";
 
 const MONERIUM_TOKEN = "monerium_token";
 
@@ -33,13 +34,6 @@ const useSafeMoneriumPack = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const authProvider = useSelector(selectAuthProvider);
   const selectedSafe = useSelector(selectSelectedSafe);
-  const safeAddress = useSelector(selectEoa);
-
-  console.log("safe monerium safeThreshold", safeThreshold);
-  console.log("safe monerium moneriumPack", moneriumPack);
-  console.log("safe monerium orderState", orderState);
-  console.log("safe monerium authContext", authContext);
-  console.log("safe monerium moneriumClient", moneriumClient);
 
   const init = useCallback(async () => {
     if (!isAuthenticated || !selectedSafe || !authProvider) return;
@@ -57,18 +51,12 @@ const useSafeMoneriumPack = () => {
       isL1SafeMasterCopy: true,
     });
 
-    console.log("safe safeSdk", safeSdk);
-
     const pack = new MoneriumPack({
       clientId: process.env.NEXT_PUBLIC_MONERIUM_CLIENT_ID,
       environment: "sandbox",
     });
 
     await pack.init({ safeSdk });
-
-    console.log("safe pack", pack);
-
-    // console.log("safe OrderState", OrderState);
 
     pack.subscribe(OrderState.pending, (notification) => {
       setOrderState(notification.meta.state);
@@ -79,8 +67,6 @@ const useSafeMoneriumPack = () => {
     });
 
     pack.subscribe(OrderState.rejected, (notification) => {
-      console.log("safe OrderState.rejected", notification);
-
       setOrderState(notification.meta.state);
       setTimeout(() => {
         setOrderState(undefined);
@@ -95,60 +81,54 @@ const useSafeMoneriumPack = () => {
     });
 
     setMoneriumPack(pack);
-
-    // const threshold = await safeSdk.getThreshold();
-    // const owners = await safeSdk.getOwners();
-
-    // console.log("safe threshold", threshold);
-    // console.log("safe owners", owners);
-
-    // setSafeThreshold(`${threshold}/${owners.length}`);
   }, [selectedSafe, authProvider, isAuthenticated]);
-
-  const startMoneriumFlow = useCallback(
-    async (authCode, refreshToken) => {
-      if (!moneriumPack) return;
-
-      console.log("hellloooooooo");
-
-      const moneriumClient = await moneriumPack.open({
-        // redirectUrl: process.env.REACT_APP_MONERIUM_REDIRECT_URL,
-        redirectUrl: `${window.location.origin}/user/settings`,
-        authCode,
-        refreshToken,
-      });
-
-      if (moneriumClient.bearerProfile) {
-        localStorage.setItem(
-          MONERIUM_TOKEN,
-          moneriumClient.bearerProfile.refresh_token
-        );
-
-        const authContext = await moneriumClient.getAuthContext();
-        const profile = await moneriumClient.getProfile(
-          authContext.defaultProfile
-        );
-        const iban = profile.accounts.find((account) => account.address === safeAddress && account.iban)?.iban ?? '';
-        console.log('IBAN: '+iban)
-        
-        // PUT API /user-settings `monerium_iban = iban`
-        // on success: display message "Your wallet is successfully linked with Monerium. You can top it up anytime here[https://sandbox.monerium.dev/accounts]"
-        // setMoneriumInfo(
-        //   getMoneriumInfo(safeSelected, authContext, profile, balances)
-        // );
-      }
-
-      // setMoneriumClient(moneriumClient);
-      // dispatch(setMoneriumClient(moneriumClient));
-    },
-    [moneriumPack]
-  );
 
   const closeMoneriumFlow = useCallback(async () => {
     moneriumPack?.close();
     localStorage.removeItem(MONERIUM_TOKEN);
     setAuthContext(undefined);
   }, [moneriumPack]);
+
+  const startMoneriumFlow = useCallback(
+    async (authCode, refreshToken) => {
+      if (!moneriumPack) return;
+
+      try {
+        const moneriumClient = await moneriumPack.open({
+          redirectUrl: `${window.location.origin}/user/settings`,
+          authCode,
+          refreshToken,
+        });
+
+        if (moneriumClient.bearerProfile) {
+          localStorage.setItem(
+            MONERIUM_TOKEN,
+            moneriumClient.bearerProfile.refresh_token
+          );
+
+          const authContext = await moneriumClient.getAuthContext();
+          const profile = await moneriumClient.getProfile(
+            authContext.defaultProfile
+          );
+          const iban =
+            profile.accounts.find(
+              (account) => account.address === selectedSafe && account.iban
+            )?.iban ?? "";
+
+          if (isAuthenticated && iban) {
+            const formData = new FormData();
+            formData.append("monerium_iban", iban);
+
+            await dispatch(updateUserSettings(formData)).unwrap();
+            closeMoneriumFlow();
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [dispatch, moneriumPack, selectedSafe, isAuthenticated, closeMoneriumFlow]
+  );
 
   useEffect(() => {
     if (selectedSafe && isAuthenticated) init();
@@ -165,8 +145,6 @@ const useSafeMoneriumPack = () => {
 
     if (authCode || refreshToken) startMoneriumFlow(authCode, refreshToken);
   }, [moneriumPack, startMoneriumFlow]);
-
-  console.log("safeAddress", safeAddress);
 
   return {
     moneriumPack,

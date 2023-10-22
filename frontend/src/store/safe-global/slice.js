@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   provider: null,
   web3AuthPack: null,
   moneriumClient: null,
+  appScopedPrivkey: null,
 };
 
 const slice = createSlice({
@@ -37,6 +38,11 @@ const slice = createSlice({
 
       return state;
     },
+    setAppScopedPrivkey: (state, { payload }) => {
+      state.appScopedPrivkey = payload;
+
+      return state;
+    },
   },
 });
 
@@ -45,6 +51,7 @@ export const {
   setSafeAuthSignInResponse,
   setSelectedSafe,
   setWeb3AuthPack,
+  setAppScopedPrivkey,
 } = slice.actions;
 
 export default slice.reducer;
